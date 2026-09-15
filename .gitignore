@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+
+# build output
+.next/
+out/
+security/
+*.tsbuildinfo
+next-env.d.ts
+
+# generated at build time
+public/og.png
+public/apple-icon.png
+public/LICENSE.txt
+
+# tests
+test-results/
+playwright-report/
+blob-report/
+coverage/
+
+# env and secrets
+.env*
+!.env.example
+*.pem
+*.key
+
+# deploy state on the server
+.deployed-image
+
+# logs and scratch
+*.log
+tmp/
+
+# editors and os
+.DS_Store
+.vscode/
+.idea/
+.claude/
