@@ -1,0 +1,40 @@
+{
+  "name": "nu-datathon",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "node --experimental-strip-types scripts/build-assets.mjs && next build && node scripts/build-security.mjs",
+    "start": "node scripts/preview.mjs",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run --config tests/vitest.config.ts",
+    "test:e2e": "playwright test --config tests/playwright.config.ts",
+    "verify": "npm run lint && npm run typecheck && npm test && npm run build && npm run test:e2e"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "1.63.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "16.3.5",
+    "prettier": "^3.9.6",
+    "sharp": "^0.35.4",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5.9.0",
+    "vitest": "5.0.1"
+  }
+}
