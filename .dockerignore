@@ -1,0 +1,21 @@
+# allow only what docker/Dockerfile copies
+*
+!package.json
+!package-lock.json
+!next.config.ts
+!tsconfig.json
+!postcss.config.mjs
+!src/
+!src/**
+!public/
+!public/**
+!scripts/build-assets.mjs
+!scripts/build-security.mjs
+!LICENSE
+!docker/Caddyfile
+
+# regenerated inside the image
+public/og.png
+public/apple-icon.png
+public/LICENSE.txt
+**/.DS_Store

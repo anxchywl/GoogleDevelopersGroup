@@ -1,0 +1,18 @@
+name: nu-datathon
+services:
+  nu-datathon-web:
+    image: ${DATATHON_IMAGE:?set an immutable GHCR image digest}
+    restart: unless-stopped
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    ports:
+      - "127.0.0.1:3080:8080"
+    pids_limit: 64
+    mem_limit: 128m
+    cpus: 0.5
