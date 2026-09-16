@@ -11,6 +11,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 FROM caddy:2-alpine
+# the binary ships with cap_net_bind_service, which cannot be granted under cap-drop ALL and no-new-privileges
+RUN apk add --no-cache libcap-utils && setcap -r /usr/bin/caddy && apk del libcap-utils
 COPY --from=build /app/out /srv
 COPY --from=build /app/security/headers.caddy /etc/caddy/headers.caddy
 COPY docker/Caddyfile /etc/caddy/Caddyfile
