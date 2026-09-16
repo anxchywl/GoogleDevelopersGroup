@@ -1,0 +1,44 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npm audit --audit-level=moderate
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run verify
+      - run: docker build -f docker/Dockerfile -t nu-datathon:ci .
+      - name: validate container
+        run: |
+          docker run --rm nu-datathon:ci caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+          docker run -d --name datathon-check --read-only --cap-drop ALL --security-opt no-new-privileges --tmpfs /tmp:size=16m,mode=1777 -p 127.0.0.1:3080:8080 nu-datathon:ci
+          curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:3080/
+          test "$(docker inspect -f '{{.Config.User}}' datathon-check)" = "10001:10001"
+          test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:3080/)" = "405"
+      - name: remove test container
+        if: always()
+        run: docker rm -f datathon-check || true
