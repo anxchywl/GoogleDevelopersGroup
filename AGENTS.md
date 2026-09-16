@@ -1,6 +1,6 @@
 # Repository rules
 
-A static, three-language sponsorship page for a proposed student datathon. Read [docs/CONTENT.md](docs/CONTENT.md) before you touch any claim, number, link, logo or benefit.
+A static, three-language sponsorship page for a proposed student datathon. Read the content rules below before you touch any claim, number, link, logo or benefit.
 
 ## Where things go
 

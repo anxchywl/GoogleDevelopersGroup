@@ -68,7 +68,7 @@ const en = {
   partnersLabel: "Companies that have worked with us",
 
   footerColumns: ["Event", "Talk to us"],
-  sourceCode: "Source", rights: "GDG on Campus Nazarbayev University",
+  sourceCode: "Open source on GitHub", rights: "GDG on Campus Nazarbayev University",
   emailLabel: "Email", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
 
@@ -140,7 +140,7 @@ const kk: typeof en = {
   partnersLabel: "Бізбен жұмыс істеген компаниялар",
 
   footerColumns: ["Іс-шара", "Байланыс"],
-  sourceCode: "Бастапқы код", rights: "GDG on Campus Nazarbayev University",
+  sourceCode: "GitHub-та ашық код", rights: "GDG on Campus Nazarbayev University",
   emailLabel: "Пошта", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
 
@@ -212,7 +212,7 @@ const ru: typeof en = {
   partnersLabel: "Компании, которые уже работали с нами",
 
   footerColumns: ["Событие", "Связаться"],
-  sourceCode: "Исходный код", rights: "GDG on Campus Nazarbayev University",
+  sourceCode: "Открытый код на GitHub", rights: "GDG on Campus Nazarbayev University",
   emailLabel: "Почта", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
 

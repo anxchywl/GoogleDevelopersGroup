@@ -23,7 +23,7 @@ The hero mark's arms animate in once. The hover pulse lives on a nested group, s
 
 Section labels ship as real text in the HTML. On mount each one splits into a `.sr-only` copy carrying the real label and an `aria-hidden` copy that is scrambled, so a reader arrives at a coded label and watches it decode when the section reaches the viewport. Screen readers always get the real text. The `aria-hidden` copy is what animates, and the element collapses back to plain text when it finishes. Under reduced motion nothing is scrambled at all. Putting the real label in `aria-label` would have been simpler but `aria-label` on a paragraph is prohibited and fails an axe audit.
 
-The drifting shapes hold positions in page coordinates and render through a fixed layer, so the cursor can push them anywhere, including far below the fold. It is a damped loop with a slow wander and a gentle impulse. Hidden below 640px.
+The drifting shapes hold positions in page coordinates and render through a fixed layer, so the cursor can push them anywhere, including far below the fold. It is a damped loop with a slow wander and a gentle impulse. Below 640px nine smaller shapes stay in the opening section. On touch screens a shape can be dragged anywhere; holding it near the screen edge scrolls the page.
 
 The photo rail ships as a normal scroll-snap container with buttons. When motion is allowed, the Gallery takes it over, hides the buttons and slides the track from the page scroll position instead. It picks the mode with `useSyncExternalStore`, whose server snapshot reports reduced motion, so the scrollable version is what lands in the HTML.
 

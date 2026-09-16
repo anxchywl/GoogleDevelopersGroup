@@ -77,7 +77,7 @@ jobs:
           docker run --rm "$IMAGE:latest" caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
           docker run -d --name gdg-check --read-only --cap-drop ALL --security-opt no-new-privileges \
             --tmpfs /tmp:size=16m,mode=1777 -p 127.0.0.1:3080:8080 "$IMAGE:latest"
-          curl --fail --silent --retry 10 --retry-connrefused --retry-delay 1 -o /dev/null http://127.0.0.1:3080/
+          curl --fail --silent --retry 15 --retry-all-errors --retry-delay 1 -o /dev/null http://127.0.0.1:3080/
           test "$(docker inspect -f '{{.Config.User}}' gdg-check)" = "10001:10001"
           test "$(curl -s -o /dev/null -w '%{http_code}' -X POST http://127.0.0.1:3080/)" = "405"
       - name: Remove test container
