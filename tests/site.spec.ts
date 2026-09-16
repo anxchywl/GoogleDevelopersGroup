@@ -31,7 +31,8 @@ for (const route of routes) {
     expect(errors).toEqual([]);
   });
 }
-test("the photo rail follows page scroll when motion is allowed", async ({ page }) => {
+test("the photo rail follows page scroll when motion is allowed", async ({ page }, info) => {
+  test.skip(info.project.name === "mobile", "touch screens keep the swipeable rail");
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
   await page.goto("/");
@@ -42,6 +43,27 @@ test("the photo rail follows page scroll when motion is allowed", async ({ page 
   const before = await shift();
   await page.locator("footer").scrollIntoViewIfNeeded();
   await expect.poll(shift).toBeLessThan(before);
+});
+test("touch screens can swipe the photo rail", async ({ page }, info) => {
+  test.skip(info.project.name !== "mobile", "needs a touch device");
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  await page.goto("/");
+  const rail = page.locator(".gallery-rail");
+  await rail.scrollIntoViewIfNeeded();
+  await expect(rail).not.toHaveAttribute("data-linked");
+  await rail.evaluate(el => el.scrollBy({left: 400, behavior: "instant"}));
+  await expect.poll(() => rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(100);
+});
+test("phones step through the languages with one button", async ({ page }) => {
+  await page.setViewportSize({width:360,height:780});
+  await page.goto("/");
+  await expect(page.locator(".language-switcher")).toBeHidden();
+  const button = page.locator(".language-cycle");
+  for (const [label, next] of [["EN","/kk/"],["ҚАЗ","/ru/"],["РУС","/"]] as const) {
+    await expect(button).toHaveText(label);
+    await button.click();
+    await expect.poll(() => new URL(page.url()).pathname).toBe(next);
+  }
 });
 test("section labels ship scrambled and decode when the section arrives", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"no-preference"});

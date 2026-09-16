@@ -89,6 +89,8 @@ main section[id] { scroll-margin-top:calc(26px - var(--section-pad)); }
 .language-switcher a { font-size:10px; font-weight:750; height:32px; width:44px; display:grid; place-items:center; border-radius:100px; }
 .language-switcher a[aria-current=page] { background:var(--brand-soft); color:var(--brand-deep); }
 .language-switcher a:hover { background:#eaecef; }
+.language-cycle { display:none; align-items:center; justify-content:center; min-width:52px; height:38px; padding:0 14px; border:1px solid var(--line); border-radius:100px; background:var(--paper); font-size:11px; font-weight:750; letter-spacing:.3px; transition:background .2s,transform .15s; }
+.language-cycle:active { transform:scale(.96); background:var(--brand-soft); }
 
 /* hero */
 .hero { position:relative; overflow:hidden; border-bottom:1px solid var(--line); }
@@ -337,26 +339,30 @@ main section[id] { scroll-margin-top:calc(26px - var(--section-pad)); }
 }
 @media(max-width:640px) {
   .shell { width:calc(100% - 36px); }
-  .site-header { padding:16px 18px 12px; gap:12px; }
+  .site-header { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:0 10px; padding:12px 18px 0; min-height:0; }
+  .wordmark { min-width:0; gap:10px; }
+  .wordmark-text { min-width:0; }
   .wordmark-text b { font-size:15px; }
-  .wordmark-text small { font-size:9px; }
+  .wordmark-text small { font-size:10px; }
   .mark { width:26px; height:26px; }
-  .header-cta { display:none; }
-  .language-switcher a { font-size:9px; width:40px; height:34px; }
-  .primary-nav { font-size:12px; gap:18px; padding-top:11px; }
+  .header-cta,.language-switcher { display:none; }
+  .language-cycle { display:inline-flex; }
+  .header-actions { margin-left:0; }
+  .primary-nav { grid-column:1 / -1; font-size:13px; gap:0; justify-content:space-between; margin-top:10px; padding-top:2px; }
+  .primary-nav a { padding-block:12px; }
   .hero-inner { padding-block:44px 58px; }
   .hero-mark { width:98px; margin-bottom:22px; }
   .drifters { display:none; }
-  .byline { font-size:9px; letter-spacing:.8px; }
+  .byline { font-size:10px; letter-spacing:.6px; }
   .hero h1 { letter-spacing:-3px; }
   .hero-lead { font-size:14px; margin-top:20px; }
   .hero-actions { margin-top:26px; width:100%; flex-direction:column; align-items:stretch; }
   .hero-actions .button { width:100%; }
-  .hero-where { font-size:9px; margin-top:24px; }
+  .hero-where { font-size:10px; margin-top:24px; }
   .stats-grid { padding-block:26px; gap:22px 16px; }
   .stats-grid > div + div { padding-left:16px; }
   .stat-value { font-size:34px; }
-  .stat-label { font-size:9px; }
+  .stat-label { font-size:10px; }
   h2 { font-size:34px; letter-spacing:-1.5px; }
   :root { --section-pad:58px; }
   .section-heading { margin-bottom:32px; }
@@ -389,14 +395,23 @@ main section[id] { scroll-margin-top:calc(26px - var(--section-pad)); }
   .team-shot img { border-radius:14px; }
   .gallery { margin-top:38px; }
   .gallery-rail li { flex-basis:78vw; }
+  .gallery-rail { scroll-padding-inline:0; overscroll-behavior-x:contain; }
   .gallery-rail img { border-radius:12px; }
   .past-partners { margin-top:38px; padding-top:26px; }
-  .past-partners li { font-size:13px; padding:9px 16px; }
-  .past-partners img { height:84px; }
+  .past-partners ul { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .past-partners li { display:grid; place-items:center; padding:10px; background:#fff; }
+  .past-partners li:last-child:nth-child(odd) { grid-column:1 / -1; justify-self:center; width:calc(50% - 6px); }
+  .past-partners a { width:100%; }
+  .past-partners img { height:68px; width:100%; object-fit:contain; }
+  .past-partners li:hover { transform:none; box-shadow:none; }
   .site-footer { padding-block:48px 22px; }
   .footer-top { padding-bottom:36px; gap:34px; }
   .footer-links { gap:26px; }
   .footer-bottom { flex-direction:column; gap:10px; font-size:10px; }
+}
+@media(max-width:340px) {
+  .primary-nav { font-size:12px; overflow-x:auto; scrollbar-width:none; }
+  .wordmark-text small { font-size:9.5px; }
 }
 @media(max-width:360px) {
   .shell { width:calc(100% - 28px); }
@@ -410,7 +425,7 @@ main section[id] { scroll-margin-top:calc(26px - var(--section-pad)); }
   *,*::before,*::after { animation:none!important; transition:none!important; }
 }
 @media print {
-  .header-actions,.primary-nav,.hero-actions,.language-switcher,.gallery-controls,.drifters { display:none; }
+  .header-actions,.primary-nav,.hero-actions,.language-switcher,.language-cycle,.gallery-controls,.drifters { display:none; }
   .shell { width:100%; }
   .section { padding-block:24px; }
   .hero::before { display:none; }

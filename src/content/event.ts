@@ -6,6 +6,7 @@ const channel = "t.me/gdsc_nu, chapter channel, read 2026-09-16";
 const planned = <T>(value: T): Claim<T> => ({ status: "proposed", value, source: proposal });
 const known = <T>(value: T, source: string): Claim<T> => ({ status: "confirmed", value, source });
 const unknown = <T>(): Claim<T> => ({ status: "unknown", value: null });
+const siteUrl = "https://gdg.anxchywl.dev";
 
 export const event = {
   name: "Google Datathon",
@@ -21,8 +22,8 @@ export const event = {
   dayCount: 3,
   email: known("gdsc@nu.edu.kz", proposal + ", page 11"),
   registration: unknown<string>(),
-  siteUrl: "https://gdg.anxchywl.dev",
-  canonicalUrl: unknown<string>(),
+  siteUrl,
+  canonicalUrl: known(siteUrl, "organizer, indexing approved 2026-09-16"),
   logoPermission: { status: "approved", source: "chapter-supplied profile mark, confirmed for this site by the organizer" } as Permission,
   affiliation: known("Official campus chapter of Google Developer Groups", profile),
   followers: known(987, profile + ", read 2026-09-16"),

@@ -1,64 +1,62 @@
-# Google Datathon · NU
+# Google Datathon NU
 
-A one-page website that asks companies to sponsor the **Google Datathon** at Nazarbayev University. It is run by the GDG on Campus Nazarbayev University chapter.
+Sponsorship website for the Google Datathon at Nazarbayev University, organized by GDG on Campus NU. Available in English, Kazakh and Russian.
 
-The page comes in English, Kazakh and Russian. It tells a sponsor what the event is, what each package includes, who runs it, and how to get in touch.
+Live: https://gdg.anxchywl.dev
 
-**Live:** https://gdg.anxchywl.dev
+## Stack
 
-Some details are not decided yet, such as registration, package prices and sponsors. The page leaves those out instead of guessing.
+Next.js, TypeScript, Tailwind CSS. Static export served by Caddy in Docker.
 
-## What it is built with
+## Getting started
 
-Next.js, TypeScript and Tailwind CSS. The build turns the site into plain static files, so there is no backend, database or API.
-
-## Run it on your computer
-
-You need Node.js 22.12 or newer.
+Requires Node.js 22.12+.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Then open http://127.0.0.1:3000. English is at `/`, Kazakh at `/kk/` and Russian at `/ru/`.
+Open http://127.0.0.1:3000. Kazakh is at `/kk/`, Russian at `/ru/`.
 
-## Useful commands
+## Scripts
 
-| Command | What it does |
+| Command | Description |
 |---|---|
-| `npm run dev` | Starts the site with live reload |
-| `npm run lint` | Checks code style |
-| `npm run typecheck` | Checks types |
-| `npm test` | Checks the content rules |
-| `npm run test:e2e` | Opens the site in real browsers and tests it |
-| `npm run build` | Builds the static site into `out/` |
-| `npm start` | Serves the built site the way production does |
-| `npm run verify` | Runs every check above, in order |
+| `npm run dev` | Dev server |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript check |
+| `npm test` | Content tests |
+| `npm run test:e2e` | Browser tests |
+| `npm run build` | Build to `out/` |
+| `npm start` | Serve the build locally |
+| `npm run verify` | Run all checks |
 
-Before the first `npm run test:e2e`, install the browsers once:
+Browser tests need Playwright browsers:
 
 ```bash
 npx playwright install --with-deps chromium webkit
 ```
 
-## Changing the text
+## Contributing
 
-All facts live in `src/content/event.ts`. All translated text lives in `src/content/copy.ts`. Read [docs/CONTENT.md](docs/CONTENT.md) first: it says where each fact comes from and what may be published.
+1. Fork the repo, or ask to be added as a collaborator.
+2. Create a branch, make your change, and run `npm run verify`.
+3. Open a pull request to `main`. CI runs the checks.
+4. After a maintainer approves and merges it, the site deploys automatically.
 
-## Deploying
+Event facts are in `src/content/event.ts`, translations in `src/content/copy.ts`. Read [AGENTS.md](AGENTS.md) before changing them.
 
-Every push to `main` is checked, built into a Docker image and deployed. See [docs/DEPLOY.md](docs/DEPLOY.md).
+## Deployment
 
-## More docs
+Pushes to `main` are tested, built and deployed automatically. See [docs/DEPLOY.md](docs/DEPLOY.md).
 
-- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): how the page, motion and security work
-- [docs/CONTENT.md](docs/CONTENT.md): sources for every fact, photo and logo
-- [docs/DEPLOY.md](docs/DEPLOY.md): pipeline, server and rollback
-- [AGENTS.md](AGENTS.md): rules for anyone changing this repo
+## Docs
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- [docs/DEPLOY.md](docs/DEPLOY.md)
+- [AGENTS.md](AGENTS.md)
 
 ## License
 
-The code is MIT. The Noto Sans font uses the SIL Open Font License.
-
-The MIT license does **not** cover the Google Developer Groups mark, the chapter photos, or any partner logo. Those belong to their owners.
+Code is MIT. Noto Sans is under the SIL Open Font License. The GDG logo, photos and partner logos belong to their owners and are not covered by the MIT license.

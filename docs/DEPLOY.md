@@ -8,7 +8,7 @@ The site runs at https://gdg.anxchywl.dev, on the same server as Wished, Loci, M
 
 1. **Lint & Test**: `npm audit`, then `npm run verify` (lint, types, content tests, build, browser tests).
 2. **Docker Build**: builds the image, checks its Caddy config, runs it read-only, and checks it runs as a non-root user and rejects `POST`.
-3. **Deploy**, only on `main`: pushes `ghcr.io/anxchywl/gdg-web` and deploys it over SSH by its digest.
+3. **Deploy**, only after a merge to `main`: pushes `ghcr.io/anxchywl/gdg-web` and deploys it over SSH by its digest.
 
 ## Server
 
@@ -58,4 +58,4 @@ docker run --rm -p 127.0.0.1:3080:8080 --read-only --cap-drop ALL \
 
 ## Search engines
 
-`canonicalUrl` in `event.ts` is still `unknown`, so `robots.txt` asks crawlers to stay away. Set it to `https://gdg.anxchywl.dev` when the page should be indexed.
+The site is indexed. `canonicalUrl` in `event.ts` drives `robots.txt`, `sitemap.xml` and the canonical links. Set it back to `unknown()` to hide the site from search engines.
