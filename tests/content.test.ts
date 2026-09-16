@@ -49,7 +49,7 @@ describe("publishable content", () => {
       expect(new URL(sponsor.url).protocol).toBe("https:");
     }
     for (const link of event.social) expect(new URL(link.url).protocol).toBe("https:");
-    for (const url of [event.canonicalUrl, event.registration, event.repositoryUrl]) {
+    for (const url of [event.canonicalUrl, event.registration, event.githubUrl]) {
       if (url.status !== "unknown") expect(new URL(url.value).protocol).toBe("https:");
     }
   });
