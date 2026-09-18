@@ -21,6 +21,7 @@ export const event = {
   dayCount: 3,
   email: known("gdsc@nu.edu.kz", proposal + ", page 11"),
   registration: unknown<string>(),
+  siteUrl: "https://gdg.anxchywl.dev",
   canonicalUrl: unknown<string>(),
   logoPermission: { status: "approved", source: "chapter-supplied profile mark, confirmed for this site by the organizer" } as Permission,
   affiliation: known("Official campus chapter of Google Developer Groups", profile),
