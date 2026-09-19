@@ -1,7 +1,10 @@
-name: nu-datathon
+name: gdg
+
 services:
-  nu-datathon-web:
-    image: ${DATATHON_IMAGE:?set an immutable GHCR image digest}
+  web:
+    image: ${GDG_IMAGE:?set to a ghcr.io/anxchywl/gdg-web image digest}
+    # the shared caddy reaches this by container name, see Wished's Caddyfile.production
+    container_name: gdg-web
     restart: unless-stopped
     user: "10001:10001"
     read_only: true
@@ -11,8 +14,13 @@ services:
       - no-new-privileges:true
     tmpfs:
       - /tmp:size=16m,mode=1777
-    ports:
-      - "127.0.0.1:3080:8080"
+    networks:
+      - proxy
     pids_limit: 64
     mem_limit: 128m
     cpus: 0.5
+
+networks:
+  proxy:
+    name: wished_wished-app
+    external: true
