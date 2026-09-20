@@ -31,7 +31,8 @@ for (const route of routes) {
     expect(errors).toEqual([]);
   });
 }
-test("the photo rail follows page scroll when motion is allowed", async ({ page }) => {
+test("the photo rail follows page scroll when motion is allowed", async ({ page }, info) => {
+  test.skip(info.project.name === "mobile", "touch screens keep the swipeable rail");
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
   await page.goto("/");
@@ -42,6 +43,52 @@ test("the photo rail follows page scroll when motion is allowed", async ({ page 
   const before = await shift();
   await page.locator("footer").scrollIntoViewIfNeeded();
   await expect.poll(shift).toBeLessThan(before);
+});
+test("touch screens can swipe the photo rail", async ({ page }, info) => {
+  test.skip(info.project.name !== "mobile", "needs a touch device");
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  await page.goto("/");
+  const rail = page.locator(".gallery-rail");
+  await rail.scrollIntoViewIfNeeded();
+  await expect(rail).not.toHaveAttribute("data-linked");
+  await rail.evaluate(el => el.scrollBy({left: 400, behavior: "instant"}));
+  await expect.poll(() => rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(100);
+});
+test("phones keep the shapes in the opening section and let a finger carry one", async ({ browser, baseURL }, info) => {
+  test.skip(info.project.name !== "desktop", "raw touch input needs Chromium; runs once");
+  const context = await browser.newContext({ viewport:{width:360,height:780}, hasTouch:true, isMobile:true, reducedMotion:"no-preference" });
+  const page = await context.newPage();
+  await page.goto(baseURL + "/");
+  const shapes = page.locator(".drifters span:visible");
+  await expect(shapes).toHaveCount(9);
+  const top = () => shapes.first().evaluate(el => el.getBoundingClientRect().top + window.scrollY);
+  const home = await top();
+  await page.evaluate(() => window.scrollTo(0, 2000));
+  // the shape scrolls away with the page instead of following the screen
+  await expect.poll(top).toBeLessThan(home + 60);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  const box = (await shapes.first().boundingBox())!;
+  const x = box.x + box.width / 2, y = box.y + box.height / 2;
+  const client = await context.newCDPSession(page);
+  const touch = (type: "touchStart" | "touchMove" | "touchEnd", px: number, py: number) => client.send("Input.dispatchTouchEvent", { type, touchPoints: type === "touchEnd" ? [] : [{ x: px, y: py }] });
+  await touch("touchStart", x, y);
+  for (let i = 1; i <= 10; i++) { await touch("touchMove", x + i * 4, y + i * 30); await page.waitForTimeout(16); }
+  await page.waitForTimeout(100);
+  expect(await page.evaluate(() => window.scrollY)).toBeLessThan(40);
+  expect(await top()).toBeGreaterThan(home + 150);
+  await touch("touchEnd", 0, 0);
+  await context.close();
+});
+test("phones step through the languages with one button", async ({ page }) => {
+  await page.setViewportSize({width:360,height:780});
+  await page.goto("/");
+  await expect(page.locator(".language-switcher")).toBeHidden();
+  const button = page.locator(".language-cycle");
+  for (const [label, next] of [["EN","/kk/"],["ҚАЗ","/ru/"],["РУС","/"]] as const) {
+    await expect(button).toHaveText(label);
+    await button.click();
+    await expect.poll(() => new URL(page.url()).pathname).toBe(next);
+  }
 });
 test("section labels ship scrambled and decode when the section arrives", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"no-preference"});

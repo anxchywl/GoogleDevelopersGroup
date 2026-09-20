@@ -10,7 +10,8 @@ const CONTROLS = {
   ru: { prev: "Предыдущие фото", next: "Следующие фото" },
 };
 
-const QUERY = "(prefers-reduced-motion: reduce)";
+// touch screens keep a swipeable rail; only a mouse or trackpad gets the scroll-linked one
+const QUERY = "(prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine)";
 
 export function Gallery({ locale }: { locale: Locale }) {
   const c = copy[locale];
@@ -21,8 +22,8 @@ export function Gallery({ locale }: { locale: Locale }) {
     media.addEventListener("change", notify);
     return () => media.removeEventListener("change", notify);
   }, []);
-  // server and first paint assume reduced motion, so the scrollable fallback is what ships in the HTML
-  const linked = !useSyncExternalStore(subscribe, () => window.matchMedia(QUERY).matches, () => true);
+  // server and first paint assume no linking, so the scrollable fallback is what ships in the HTML
+  const linked = useSyncExternalStore(subscribe, () => window.matchMedia(QUERY).matches, () => false);
 
   // with motion allowed the rail rides the page scroll instead of its own scrollbar
   useEffect(() => {

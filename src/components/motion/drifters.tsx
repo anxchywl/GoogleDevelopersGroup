@@ -45,8 +45,43 @@ export function Drifters() {
       pointer = { dx: x - pointer.x, dy: y - pointer.y, x, y, at: performance.now() };
     };
 
+    // on touch screens a shape can be picked up and carried; touches that miss every shape still scroll
+    const EDGE = 72;
+    let drag: { part: (typeof parts)[number]; id: number; ox: number; oy: number; cx: number; cy: number } | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      const touch = e.touches[0];
+      const part = parts.find(p => {
+        const box = p.element.getBoundingClientRect();
+        return box.width > 0 && touch.clientX > box.left - 12 && touch.clientX < box.right + 12
+          && touch.clientY > box.top - 12 && touch.clientY < box.bottom + 12;
+      });
+      if (!part) return;
+      e.preventDefault();
+      drag = { part, id: touch.identifier, cx: touch.clientX, cy: touch.clientY,
+        ox: touch.clientX - part.px, oy: touch.clientY + window.scrollY - part.py };
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (!drag) return;
+      const touch = Array.from(e.touches).find(t => t.identifier === drag!.id);
+      if (!touch) return;
+      e.preventDefault();
+      drag.cx = touch.clientX; drag.cy = touch.clientY;
+    };
+    const onTouchEnd = () => { drag = null; };
+
     let frame = 0;
     const step = (now: number) => {
+      if (drag) {
+        // holding near the top or bottom edge carries the shape further along the page
+        if (drag.cy > window.innerHeight - EDGE) window.scrollBy(0, 9);
+        else if (drag.cy < EDGE && window.scrollY > 0) window.scrollBy(0, -9);
+        const p = drag.part;
+        const x = drag.cx - drag.ox, y = drag.cy + window.scrollY - drag.oy;
+        // the last step becomes the throw when the finger lifts
+        p.vx = (x - p.px) * 0.6; p.vy = (y - p.py) * 0.6;
+        p.px = x - p.vx; p.py = y - p.vy;
+      }
       const limitY = document.documentElement.scrollHeight;
       const fresh = now - pointer.at < 120;
       for (const p of parts) {
@@ -90,10 +125,18 @@ export function Drifters() {
     const onVisibility = () => (document.hidden ? stop() : start());
 
     window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("touchstart", onTouchStart, { passive: false });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd);
+    window.addEventListener("touchcancel", onTouchEnd);
     document.addEventListener("visibilitychange", onVisibility);
     start();
     return () => {
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", onTouchEnd);
       document.removeEventListener("visibilitychange", onVisibility);
       stop();
     };
