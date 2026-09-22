@@ -67,7 +67,74 @@ const en = {
   },
   partnersLabel: "Companies that have worked with us",
 
-  footerColumns: ["Event", "Talk to us"],
+  footerEvents: "Our events",
+  jams: {
+    nav: ["About", "Format", "Join", "Next jam"],
+    headerCta: "Join the channel",
+    tagline: "Students and professors on one team.",
+    heroLead: "A short case competition at Nazarbayev University. Students and professors work in mixed teams on one real problem and pitch their solution to a panel.",
+    studentCta: "I am a student", professorCta: "I am a professor",
+    next: "Next jam", timeRange: "{start} to {end}",
+    table: { students: "Students", professors: "Professors", case: "CASE" },
+
+    aboutLabel: "01 / WHAT IT IS", aboutTitle: "A case competition\nwith your professors.",
+    aboutBody: "Google Jams replaces the lecture format with teamwork. Students and professors sit at the same table and work on the same problem.",
+    compare: {
+      caption: "A lecture compared with a jam", lecture: "A lecture", jam: "A jam",
+      rows: [
+        { lecture: "One person talks", jam: "Everyone at the table talks" },
+        { lecture: "The professor stands at the front", jam: "The professor sits on your team" },
+        { lecture: "You take notes", jam: "You build an answer" },
+        { lecture: "Graded weeks later", jam: "Pitched the same evening" },
+      ],
+    },
+
+    formatLabel: "02 / HOW IT RUNS", formatTitle: "Warm up. Solve.\nPitch.",
+    formatBody: "The plan for the next jam.",
+    minutes: "min",
+    steps: [
+      { title: "Warm-up", body: "Code puzzles and bingo." },
+      { title: "Case solving", body: "Teams get the case and work on a solution together with professors." },
+      { title: "Coffee break" },
+      { title: "Pitching", body: "Each team presents its solution to the panel and answers questions." },
+    ],
+    warmupsLabel: "Try the warm-ups",
+    puzzles: {
+      title: "Code puzzles", body: "You get a function cut into fragments. Work out the logic, look at each piece and put them back in the order that runs.",
+      hint: "Tap the lines in the order they run.", done: "It runs.", again: "Shuffle again",
+    },
+    bingo: {
+      title: "Bingo", body: "You get a card of descriptions. Walk around, talk to people, find someone who fits each one and write their name in the box.",
+      sample: "Sample bingo card", win: "Bingo. Full line.",
+      cells: ["Has their own app", "Speaks three languages", "Writes Python", "Has been to a hackathon", "In first year", "Reads research papers", "Dark mode everywhere", "Has pitched before", "Tea over coffee"],
+    },
+    criteriaLabel: "The jury sheet", criteriaHead: ["Criterion", "What the jury looks for", "Score"],
+    criteria: {
+      feasibility: { title: "Feasibility", body: "Could this actually be built with what the team has?" },
+      creativity: { title: "Creativity", body: "A fresh angle on the problem, as long as it still makes sense and solves it." },
+      process: { title: "Process", body: "The steps to bring it to life: planning, design, development and testing." },
+      expenses: { title: "Expenses", body: "A rough cost broken into parts. No exact prices, just proof you thought about the budget." },
+      scalability: { title: "Scalability", body: "Does it still work when ten times more people use it?" },
+    },
+
+    joinLabel: "03 / WHY JOIN", joinTitle: "Two sides\nof one table.",
+    students: {
+      tag: "FOR STUDENTS", title: "Work next to your professors.",
+      benefits: ["Solve a real problem with professors on your team", "Meet new people during the warm-up games", "Practise pitching in front of a panel", "No finished product needed. Slides, a PDF or a demo link are enough", "Prizes for the winners, coffee for everyone"],
+      cta: "Follow the channel for registration",
+    },
+    professors: {
+      tag: "FOR PROFESSORS", title: "Two hours. Nothing to prepare.",
+      benefits: ["We prepare the case and run the event", "Work with students outside the lecture hall and see how they solve a real problem", "Meet strong students and maybe find your next research assistant", "Guide a team and ask questions at the pitches", "Have a problem from your field that students could try? Tell us"],
+      cta: "Write to us",
+    },
+
+    nextLabel: "04 / NEXT JAM", nextTitle: "Save\nthe date.",
+    nextBody: "The registration link will be posted in our Telegram channel.",
+    runByLabel: "WHO RUNS IT", runBy: "Google Jams is run by GDG on Campus Nazarbayev University, the team behind DevFest, Google Talks and NeHackathon on campus.",
+  },
+
+  footerContact: "Talk to us",
   sourceCode: "Open source on GitHub", rights: "GDG on Campus Nazarbayev University",
   emailLabel: "Email", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
@@ -139,7 +206,74 @@ const kk: typeof en = {
   },
   partnersLabel: "Бізбен жұмыс істеген компаниялар",
 
-  footerColumns: ["Іс-шара", "Байланыс"],
+  footerEvents: "Іс-шараларымыз",
+  jams: {
+    nav: ["Туралы", "Формат", "Қатысу", "Күні"],
+    headerCta: "Арнаға жазылу",
+    tagline: "Студенттер мен профессорлар бір командада.",
+    heroLead: "Назарбаев Университетіндегі қысқа кейс-чемпионат. Студенттер мен профессорлар аралас командаларда бір нақты мәселенің үстінде жұмыс істеп, шешімін қазылар алқасына ұсынады.",
+    studentCta: "Мен студентпін", professorCta: "Мен профессормын",
+    next: "Келесі джем", timeRange: "{start}-ден {end}-ге дейін",
+    table: { students: "Студенттер", professors: "Профессорлар", case: "КЕЙС" },
+
+    aboutLabel: "01 / БҰЛ НЕ", aboutTitle: "Профессорлармен\nбірге кейс-чемпионат.",
+    aboutBody: "Google Jams дәріс форматын командалық жұмыспен алмастырады. Студенттер мен профессорлар бір үстел басында бір мәселенің үстінде жұмыс істейді.",
+    compare: {
+      caption: "Дәріс пен джемді салыстыру", lecture: "Дәріс", jam: "Джем",
+      rows: [
+        { lecture: "Бір адам сөйлейді", jam: "Үстел басындағылардың бәрі сөйлейді" },
+        { lecture: "Профессор алдыңғы жақта тұрады", jam: "Профессор сіздің командаңызда отырады" },
+        { lecture: "Сіз конспект жазасыз", jam: "Сіз жауап құрастырасыз" },
+        { lecture: "Баға апталардан кейін шығады", jam: "Сол кеште питч жасайсыз" },
+      ],
+    },
+
+    formatLabel: "02 / ҚАЛАЙ ӨТЕДІ", formatTitle: "Жаттығу. Шешім.\nПитч.",
+    formatBody: "Келесі джемнің жоспары.",
+    minutes: "мин",
+    steps: [
+      { title: "Жаттығу", body: "Код жұмбақтары мен бинго." },
+      { title: "Кейсті шешу", body: "Командалар кейсті алып, профессорлармен бірге шешім әзірлейді." },
+      { title: "Кофе-брейк" },
+      { title: "Питчинг", body: "Әр команда шешімін қазыларға ұсынып, сұрақтарға жауап береді." },
+    ],
+    warmupsLabel: "Жаттығуларды байқап көріңіз",
+    puzzles: {
+      title: "Код жұмбақтары", body: "Сізге бөліктерге бөлінген функция беріледі. Логикасын түсініп, әр фрагментті талдап, оларды жұмыс істейтін ретке қойыңыз.",
+      hint: "Жолдарды орындалу ретімен басыңыз.", done: "Жұмыс істейді.", again: "Қайта араластыру",
+    },
+    bingo: {
+      title: "Бинго", body: "Сізге түрлі сипаттамалар жазылған карточка беріледі. Залды аралап, адамдармен сөйлесіп, әр сипаттамаға сай адамды тауып, оның атын ұяшыққа жазыңыз.",
+      sample: "Бинго карточкасының үлгісі", win: "Бинго. Толық қатар.",
+      cells: ["Өз қосымшасы бар", "Үш тілде сөйлейді", "Python-да жазады", "Хакатонда болған", "Бірінші курста оқиды", "Ғылыми мақала оқиды", "Барлық жерде қараңғы тақырып", "Бұрын питч жасаған", "Кофеден гөрі шай"],
+    },
+    criteriaLabel: "Қазылар парағы", criteriaHead: ["Критерий", "Қазылар неге қарайды", "Балл"],
+    criteria: {
+      feasibility: { title: "Іске асырымдылық", body: "Мұны команданың қолындағы мүмкіндікпен шынымен жасауға бола ма?" },
+      creativity: { title: "Креативтілік", body: "Мәселеге жаңа көзқарас, бірақ ол мағыналы болып, мәселені шешуі керек." },
+      process: { title: "Процесс", body: "Идеяны іске асыру қадамдары: жоспарлау, дизайн, әзірлеу және тестілеу." },
+      expenses: { title: "Шығындар", body: "Бөліктерге бөлінген шамамен құн. Нақты бағалар қажет емес, бюджетті ойластырғаныңызды көрсетсеңіз болды." },
+      scalability: { title: "Масштабталу", body: "Қолданушылар он есе көбейсе де жұмыс істей ме?" },
+    },
+
+    joinLabel: "03 / НЕГЕ ҚАТЫСУ КЕРЕК", joinTitle: "Бір үстелдің\nекі жағы.",
+    students: {
+      tag: "СТУДЕНТТЕРГЕ", title: "Профессорлармен қатар жұмыс істеңіз.",
+      benefits: ["Командаңыздағы профессорлармен бірге нақты мәселені шешіңіз", "Жаттығу ойындарында жаңа адамдармен танысыңыз", "Қазылар алдында питч жасап жаттығыңыз", "Дайын өнім қажет емес. Слайдтар, PDF немесе демо сілтеме жеткілікті", "Жеңімпаздарға жүлде, барлығына кофе"],
+      cta: "Тіркелу үшін арнаға жазылыңыз",
+    },
+    professors: {
+      tag: "ПРОФЕССОРЛАРҒА", title: "Екі сағат. Дайындалудың қажеті жоқ.",
+      benefits: ["Кейсті біз дайындаймыз және іс-шараны өзіміз жүргіземіз", "Студенттермен дәрісханадан тыс жұмыс істеп, олардың нақты мәселені қалай шешетінін көріңіз", "Мықты студенттермен танысып, келесі ғылыми ассистентіңізді табуыңыз мүмкін", "Командаға бағыт беріп, питч кезінде сұрақтар қойыңыз", "Студенттер шешіп көретін өз салаңыздағы мәселе бар ма? Бізге айтыңыз"],
+      cta: "Бізге жазыңыз",
+    },
+
+    nextLabel: "04 / КЕЛЕСІ ДЖЕМ", nextTitle: "Күнді\nбелгілеп қойыңыз.",
+    nextBody: "Тіркелу сілтемесі Telegram арнамызда жарияланады.",
+    runByLabel: "КІМ ӨТКІЗЕДІ", runBy: "Google Jams-ты GDG on Campus Nazarbayev University өткізеді. Кампустағы DevFest, Google Talks және NeHackathon-ды да осы команда ұйымдастырған.",
+  },
+
+  footerContact: "Байланыс",
   sourceCode: "GitHub-та ашық код", rights: "GDG on Campus Nazarbayev University",
   emailLabel: "Пошта", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
@@ -211,7 +345,74 @@ const ru: typeof en = {
   },
   partnersLabel: "Компании, которые уже работали с нами",
 
-  footerColumns: ["Событие", "Связаться"],
+  footerEvents: "Наши события",
+  jams: {
+    nav: ["О джемах", "Формат", "Участие", "Дата"],
+    headerCta: "Подписаться",
+    tagline: "Студенты и профессора в одной команде.",
+    heroLead: "Короткий кейс-чемпионат в Назарбаев Университете. Студенты и профессора работают в смешанных командах над одной реальной задачей и защищают решение перед жюри.",
+    studentCta: "Я студент", professorCta: "Я профессор",
+    next: "Следующий джем", timeRange: "с {start} до {end}",
+    table: { students: "Студенты", professors: "Профессора", case: "КЕЙС" },
+
+    aboutLabel: "01 / ЧТО ЭТО", aboutTitle: "Кейс-чемпионат\nвместе с профессорами.",
+    aboutBody: "Google Jams заменяет формат лекции командной работой. Студенты и профессора сидят за одним столом и работают над одной задачей.",
+    compare: {
+      caption: "Лекция в сравнении с джемом", lecture: "Лекция", jam: "Джем",
+      rows: [
+        { lecture: "Говорит один человек", jam: "Говорят все за столом" },
+        { lecture: "Профессор стоит у доски", jam: "Профессор сидит в вашей команде" },
+        { lecture: "Вы пишете конспект", jam: "Вы собираете решение" },
+        { lecture: "Оценка через несколько недель", jam: "Питч в тот же вечер" },
+      ],
+    },
+
+    formatLabel: "02 / КАК ЭТО ПРОХОДИТ", formatTitle: "Разминка. Решение.\nПитч.",
+    formatBody: "План следующего джема.",
+    minutes: "мин",
+    steps: [
+      { title: "Разминка", body: "Код-пазлы и бинго." },
+      { title: "Решение кейса", body: "Команды получают кейс и работают над решением вместе с профессорами." },
+      { title: "Кофе-брейк" },
+      { title: "Питчинг", body: "Каждая команда представляет решение жюри и отвечает на вопросы." },
+    ],
+    warmupsLabel: "Попробуйте разминку",
+    puzzles: {
+      title: "Код-пазлы", body: "Вы получаете функцию, разрезанную на фрагменты. Поймите её логику, разберите каждый кусок и расставьте их в рабочем порядке.",
+      hint: "Нажимайте на строки в порядке выполнения.", done: "Работает.", again: "Перемешать ещё раз",
+    },
+    bingo: {
+      title: "Бинго", body: "Вы получаете карточку с разными описаниями. Ходите по залу, общайтесь, находите человека под каждое описание и вписывайте его имя в клетку.",
+      sample: "Пример карточки бинго", win: "Бинго. Полный ряд.",
+      cells: ["Есть своё приложение", "Говорит на трёх языках", "Пишет на Python", "Бывает на хакатонах", "Учится на первом курсе", "Читает научные статьи", "Везде тёмная тема", "Есть опыт питча", "Чай вместо кофе"],
+    },
+    criteriaLabel: "Лист жюри", criteriaHead: ["Критерий", "На что смотрит жюри", "Балл"],
+    criteria: {
+      feasibility: { title: "Реализуемость", body: "Можно ли на самом деле собрать это теми силами, что есть у команды?" },
+      creativity: { title: "Креативность", body: "Свежий взгляд на задачу, если он остаётся осмысленным и решает её." },
+      process: { title: "Процесс", body: "Шаги, которые воплотят идею: планирование, дизайн, разработка и тестирование." },
+      expenses: { title: "Расходы", body: "Примерная стоимость по частям. Точные цены не нужны, важно показать, что бюджет продуман." },
+      scalability: { title: "Масштабируемость", body: "Будет ли это работать, если пользователей станет в десять раз больше?" },
+    },
+
+    joinLabel: "03 / ЗАЧЕМ УЧАСТВОВАТЬ", joinTitle: "Две стороны\nодного стола.",
+    students: {
+      tag: "СТУДЕНТАМ", title: "Работайте бок о бок с профессорами.",
+      benefits: ["Решите реальную задачу вместе с профессорами в своей команде", "Познакомьтесь с новыми людьми во время разминки", "Потренируйте питч перед жюри", "Готовый продукт не нужен. Достаточно слайдов, PDF или ссылки на демо", "Призы победителям и кофе для всех"],
+      cta: "Подписаться на канал с регистрацией",
+    },
+    professors: {
+      tag: "ПРОФЕССОРАМ", title: "Два часа. Готовиться не нужно.",
+      benefits: ["Мы готовим кейс и проводим мероприятие", "Поработайте со студентами вне аудитории и посмотрите, как они решают реальную задачу", "Познакомьтесь с сильными студентами и, возможно, найдите нового научного ассистента", "Направляйте команду и задавайте вопросы на питчах", "Есть задача из вашей области, которую стоит дать студентам? Напишите нам"],
+      cta: "Написать нам",
+    },
+
+    nextLabel: "04 / СЛЕДУЮЩИЙ ДЖЕМ", nextTitle: "Запишите\nдату.",
+    nextBody: "Ссылку на регистрацию мы опубликуем в Telegram-канале.",
+    runByLabel: "КТО ПРОВОДИТ", runBy: "Google Jams проводит GDG on Campus Nazarbayev University. Та же команда делала в кампусе DevFest, Google Talks и NeHackathon.",
+  },
+
+  footerContact: "Связаться",
   sourceCode: "Открытый код на GitHub", rights: "GDG on Campus Nazarbayev University",
   emailLabel: "Почта", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
