@@ -69,3 +69,19 @@ export const packages: Package[] = [
   { id: "internship", scope: "career", status: "proposed", price: unknown<number>(), prizePool: unknown<number>(), awards: [] },
   { id: "snacks", scope: "hospitality", status: "proposed", price: unknown<number>(), prizePool: unknown<number>(), awards: [] },
 ];
+
+const jamsDeck = "google jamsss.pptx, organizer-provided slides with the jam format";
+// settled facts keep a non-null value for the page to read
+const held = <T>(value: T, source: string) => ({ status: "confirmed" as const, value, source });
+
+export const jams = {
+  name: "Google Jams",
+  location: "Nazarbayev University, Astana",
+  next: held({ date: "2026-10-22", start: "18:00", end: "20:00" }, "organizer, confirmed 2026-09-24"),
+  registration: unknown<string>(),
+  telegram: "https://t.me/gdsc_nu",
+  // 20 minute warm-up and 10 minute coffee break from the organizer; the case and pitching split the rest
+  schedule: held(["18:00", "18:20", "19:20", "19:30", "20:00"], "organizer, 2026-09-24; case and pitching lengths proposed"),
+  criteria: held(["feasibility", "creativity", "process", "expenses", "scalability"] as const, jamsDeck + ", slides 9 to 12"),
+  warmups: held(["puzzles", "bingo"] as const, jamsDeck + ", slides 6 and 7"),
+};
