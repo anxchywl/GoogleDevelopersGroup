@@ -10,6 +10,7 @@ next-env.d.ts
 
 # generated at build time
 public/og.png
+public/og-jams.png
 public/apple-icon.png
 public/LICENSE.txt
 
