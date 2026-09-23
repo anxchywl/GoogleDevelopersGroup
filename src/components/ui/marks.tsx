@@ -2,11 +2,6 @@ import type { CSSProperties } from "react";
 import { copy } from "@/content/copy";
 import type { Locale } from "@/content/types";
 
-// event mark: four rounded tiles, one corner of each turned outward
-export function Mark({ className = "" }: { className?: string }) {
-  return <span className={`mark ${className}`} aria-hidden="true"><i /><i /><i /><i /></span>;
-}
-
 // four capsules traced from the chapter profile mark, drawn at their measured endpoints
 const ARMS = [
   { id: "red", color: "#ea4335", d: "M123 256 200 200", from: "-26px -20px", delay: "0ms" },
@@ -26,10 +21,11 @@ export function GdgMark({ animate = false, className = "" }: { animate?: boolean
   </svg>;
 }
 
-export function Wordmark({ locale }: { locale: Locale }) {
+// every page signs with the chapter mark; the datathon tiles live in its hero
+export function Wordmark({ locale, title = "NU Datathon", subtitle }: { locale: Locale; title?: string; subtitle?: string }) {
   const c = copy[locale];
   return <a className="wordmark" href="#top" aria-label={c.home}>
-    <Mark />
-    <span className="wordmark-text"><b>NU Datathon</b><small>{c.by}</small></span>
+    <GdgMark animate className="wordmark-mark" />
+    <span className="wordmark-text"><b>{title}</b><small>{subtitle ?? c.by}</small></span>
   </a>;
 }

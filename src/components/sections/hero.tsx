@@ -12,7 +12,7 @@ export function Hero({ locale }: { locale: Locale }) {
     <Drifters />
     <div className="shell hero-inner">
       <GdgMark animate className="hero-mark" />
-      <p className="byline">{c.byline}</p>
+      <p className="byline" data-reveal data-decode>{c.byline}</p>
       <h1 id="hero-title">Google Datathon<span className="title-period">.</span></h1>
       <p className="tagline">{event.tagline}</p>
       <p className="hero-lead">{c.heroLead}</p>
