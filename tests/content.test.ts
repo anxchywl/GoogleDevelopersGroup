@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { event, packages } from "../src/content/event";
+import { event, jams, packages } from "../src/content/event";
 import { copy } from "../src/content/copy";
 import { locales, localePath } from "../src/content/types";
-import { numberShape } from "../src/lib/site";
+import { nextJamWhen, numberShape } from "../src/lib/site";
 
 function structure(value: unknown): unknown {
   if (typeof value === "string") { expect(value.trim()).not.toBe(""); return "text"; }
@@ -77,7 +77,25 @@ describe("publishable content", () => {
       }
     }
   });
+  it("dates the next jam from the facts and keeps registration unannounced", () => {
+    expect(jams.registration.status).toBe("unknown");
+    const { date, start, end } = jams.next.value;
+    expect(Number.isNaN(Date.parse(date))).toBe(false);
+    expect(start < end).toBe(true);
+    // the evening plan starts and ends with the announced times
+    expect(jams.schedule.value[0]).toBe(start);
+    expect(jams.schedule.value.at(-1)).toBe(end);
+    for (const locale of locales) {
+      expect(copy[locale].jams.timeRange).toContain("{start}");
+      expect(copy[locale].jams.timeRange).toContain("{end}");
+      const when = nextJamWhen(locale);
+      expect(when).toContain(start);
+      expect(when).toContain(end);
+      expect(copy[locale].jams.steps.length).toBe(jams.schedule.value.length - 1);
+    }
+  });
   it("routes English, Kazakh, and Russian without browser locale guessing", () => {
-    expect(locales.map(localePath)).toEqual(["/", "/kk/", "/ru/"]);
+    expect(locales.map(locale => localePath(locale))).toEqual(["/", "/kk/", "/ru/"]);
+    expect(locales.map(locale => localePath(locale, "jams"))).toEqual(["/jams/", "/kk/jams/", "/ru/jams/"]);
   });
 });
