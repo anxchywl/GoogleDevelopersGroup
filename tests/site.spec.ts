@@ -31,6 +31,151 @@ for (const route of routes) {
     expect(errors).toEqual([]);
   });
 }
+const jamsRoutes = [{ locale:"en",path:"/jams/" }, {locale:"kk",path:"/kk/jams/"}, {locale:"ru",path:"/ru/jams/"}];
+for (const route of jamsRoutes) {
+  test(route.locale + " jams page renders accessible complete content", async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", error => errors.push(error.message));
+    page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
+    await page.goto(route.path);
+    await expect(page.locator("html")).toHaveAttribute("lang", route.locale);
+    await expect(page.locator("h1")).toContainText("Google Jams");
+    await expect(page.locator(".timebar > div")).toHaveCount(4);
+    await expect(page.locator(".jury-sheet tbody tr")).toHaveCount(5);
+    await expect(page.locator(".bingo input[type=checkbox]")).toHaveCount(9);
+    await expect(page.locator(".ticket")).toHaveCount(1);
+    await expect(page.locator(".jam-ticker, .case-file, .rules")).toHaveCount(0);
+    await expect(page.locator("header .wordmark .gdg-mark, footer .wordmark .gdg-mark, .split-badge .gdg-mark")).toHaveCount(3);
+    await expect(page.locator(".compare tbody tr")).toHaveCount(4);
+    await expect(page.locator("#students, #professors")).toHaveCount(2);
+    await expect(page.locator("form")).toHaveCount(0);
+    await settle(page);
+    const audit = await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();
+    expect(audit.violations).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+}
+test("language links keep the reader on the jams page", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/jams/");
+  await page.locator("header").getByRole("link", {name:"Русский",exact:true}).click();
+  await expect(page).toHaveURL(/\/ru\/jams\/$/);
+  await expect(page.locator("h1")).toContainText("Google Jams");
+  await page.locator("footer").getByRole("link", {name:"Google Datathon"}).click();
+  await expect(page).toHaveURL(/\/ru\/$/);
+});
+test("jams nav and hero buttons land on their sections", async ({ page }) => {
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/jams/");
+  const header = await page.locator(".site-header").evaluate(el => Math.round(el.getBoundingClientRect().height));
+  for (const id of ["about","format","join","next"]) {
+    await page.locator(`.primary-nav a[href="#${id}"]`).click();
+    const top = await page.locator(`#${id} .eyebrow`).first().evaluate(el => Math.round(el.getBoundingClientRect().top));
+    expect(top, `${id} heading below header`).toBeGreaterThanOrEqual(header);
+    expect(top, `${id} heading close to header`).toBeLessThan(header + 50);
+  }
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.locator(".hero-actions a[href='#professors']").click();
+  const card = await page.locator("#professors").evaluate(el => Math.round(el.getBoundingClientRect().top));
+  expect(card).toBeGreaterThanOrEqual(header);
+});
+test("without javascript the bingo card still calls a line and the puzzle shows the finished function", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ javaScriptEnabled:false, reducedMotion:"reduce" });
+  const page = await context.newPage();
+  await page.goto(baseURL + "/kk/jams/");
+  await expect(page.locator(".bingo-win")).toHaveCSS("opacity", "0");
+  for (const i of [0, 4, 8]) await page.locator(`.bingo-cell.b${i}`).click();
+  await expect(page.locator(".bingo-cell.b4 input")).toBeChecked();
+  await expect(page.locator(".bingo-win")).toHaveCSS("opacity", "1");
+  await expect(page.locator(".puzzle-board .puzzle-line")).toHaveCount(6);
+  await expect(page.locator(".puzzle-board .puzzle-line").first()).toHaveText("def count_vowels(text):");
+  await context.close();
+});
+test("section labels decode cleanly on the jams page", async ({ page }) => {
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/jams/");
+  for (const id of ["about","format","join","next"]) {
+    const label = page.locator(`#${id} .eyebrow`).first();
+    await label.evaluate(el => el.scrollIntoView({ block: "center" }));
+    await expect.poll(() => label.textContent()).toBe(await label.getAttribute("data-text"));
+  }
+});
+test("the header and footer carry the chapter mark on both pages", async ({ page }) => {
+  for (const path of ["/", "/jams/"]) {
+    await page.goto(path);
+    await expect(page.locator("header .wordmark .gdg-mark")).toHaveCount(1);
+    await expect(page.locator("footer .wordmark .gdg-mark")).toHaveCount(1);
+    await expect(page.locator("footer")).not.toContainText("Next jam");
+  }
+  await page.goto("/");
+  await expect(page.locator(".hero .gdg-mark.hero-mark")).toHaveCount(1);
+});
+test("blocks below the fold wait hidden and the time bar grows from empty", async ({ page }) => {
+  await page.emulateMedia({reducedMotion:"no-preference"});
+  await page.setViewportSize({width:1440,height:900});
+  await page.goto("/jams/");
+  const bar = page.locator(".timebar");
+  await expect(bar).toHaveAttribute("data-pending", "true");
+  await expect(bar).toHaveCSS("opacity", "0");
+  await bar.scrollIntoViewIfNeeded();
+  await expect(bar).toHaveAttribute("data-arrive", "true");
+  // the first segment must start small, not flash full before it grows
+  const scale = await bar.locator(".timebar-seg").first().evaluate(el => getComputedStyle(el).scale);
+  expect(scale).not.toMatch(/^(none|1)$/);
+  await expect.poll(() => bar.locator(".timebar-seg").last().evaluate(el => getComputedStyle(el).scale), {timeout: 4000}).toMatch(/^(none|1)$/);
+  await expect(bar).toHaveCSS("opacity", "1");
+});
+test("section links leave the address alone so a reload stays in place", async ({ page }) => {
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/jams/");
+  await page.locator('.primary-nav a[href="#format"]').click();
+  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBeGreaterThan(500);
+  expect(new URL(page.url()).hash).toBe("");
+  await page.evaluate(() => window.scrollBy(0, 700));
+  const before = await page.evaluate(() => Math.round(window.scrollY));
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(before);
+});
+test("an old section hash neither steals a reload nor stays in the address", async ({ page }) => {
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/jams/#format");
+  // an arrival link still lands on its section, then the hash is dropped
+  await expect.poll(() => page.locator("#format .eyebrow").first().evaluate(el => Math.round(el.getBoundingClientRect().top))).toBeLessThan(200);
+  await expect.poll(() => new URL(page.url()).hash).toBe("");
+  await page.evaluate(() => window.scrollTo({ top: 3200, behavior: "instant" }));
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(3200);
+  // a tab that still carries a hash from before keeps its place on reload too
+  await page.evaluate(() => history.replaceState(null, "", "#format"));
+  await page.evaluate(() => window.scrollTo({ top: 2400, behavior: "instant" }));
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(2400);
+});
+test("the two warm-up cards share one height on wide screens", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/jams/");
+  const heights = await page.locator(".game").evaluateAll(els => els.map(el => Math.round(el.getBoundingClientRect().height)));
+  expect(new Set(heights).size).toBe(1);
+});
+test("the code puzzle only accepts the next line and says when it runs", async ({ page }) => {
+  await page.emulateMedia({reducedMotion:"reduce"});
+  await page.goto("/jams/");
+  const pool = page.locator(".puzzle-pool button");
+  await expect(pool).toHaveCount(6);
+  await pool.filter({ hasText: "return total" }).click();
+  await expect(page.locator(".puzzle-board .placed")).toHaveCount(0);
+  for (const line of ["def count_vowels(text):", "total = 0", "for ch in text.lower():", "if ch in \"aeiou\":", "total += 1", "return total"]) {
+    await pool.filter({ hasText: line }).first().click();
+  }
+  await expect(page.locator(".puzzle")).toHaveAttribute("data-solved", "true");
+  await expect(page.locator(".puzzle-foot .micro")).toHaveText("It runs.");
+  await page.getByRole("button", { name: "Shuffle again" }).click();
+  await expect(pool).toHaveCount(6);
+});
 test("the photo rail follows page scroll when motion is allowed", async ({ page }, info) => {
   test.skip(info.project.name === "mobile", "touch screens keep the swipeable rail");
   await page.emulateMedia({reducedMotion:"no-preference"});
@@ -138,7 +283,7 @@ test("both marks ease back to rest when the cursor leaves", async ({ page }) => 
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
   await page.goto("/");
-  for (const [target, part, prop] of [["header .mark","i","translate"],[".hero-mark",".gdg-pulse","scale"]] as const) {
+  for (const [target, part, prop] of [["header .gdg-mark",".gdg-pulse","scale"],[".hero-mark",".gdg-pulse","scale"]] as const) {
     const mark = page.locator(target);
     const box = (await mark.boundingBox())!;
     const read = () => mark.locator(part).first().evaluate((el, key) => ({
@@ -244,7 +389,7 @@ test("native scrolling advances the programme and plays entrance motion", async 
 test("all locales fit narrow, tablet, and desktop screens", async ({ page }, info) => {
   test.skip(info.project.name !== "desktop", "viewport sweep runs once");
   await page.emulateMedia({reducedMotion:"reduce"});
-  for (const {path,locale} of routes) {
+  for (const {path,locale} of [...routes, ...jamsRoutes]) {
     for (const width of [320,390,768,1024,1440]) {
       await page.setViewportSize({width,height:1000});
       await page.goto(path);
@@ -254,7 +399,7 @@ test("all locales fit narrow, tablet, and desktop screens", async ({ page }, inf
       expect(clipped, `${locale} at ${width}px`).toEqual([]);
       if (width === 390 || width === 1440) {
         await page.locator("summary").evaluateAll(els => els.forEach(el=>el.parentElement?.removeAttribute("open")));
-        await page.screenshot({path:info.outputPath(locale+"-"+width+".png"),fullPage:true});
+        await page.screenshot({path:info.outputPath(path.replaceAll("/","_")+"-"+width+".png"),fullPage:true});
       }
     }
   }
