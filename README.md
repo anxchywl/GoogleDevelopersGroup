@@ -17,7 +17,7 @@ npm ci
 npm run dev
 ```
 
-Open http://127.0.0.1:3000. Kazakh is at `/kk/`, Russian at `/ru/`.
+Open http://127.0.0.1:3000. Kazakh is at `/kk/`, Russian at `/ru/`. The Google Jams page is at `/jams/`, `/kk/jams/` and `/ru/jams/`.
 
 ## Scripts
 

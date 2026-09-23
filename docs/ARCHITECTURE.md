@@ -2,11 +2,13 @@
 
 ## Rendering
 
-Next.js exports three static routes: `/`, `/kk/` and `/ru/`. Each has its own root layout so the `lang` attribute is right before any JavaScript runs.
+Next.js exports two pages in three languages: the datathon at `/`, `/kk/` and `/ru/`, and Google Jams at `/jams/`, `/kk/jams/` and `/ru/jams/`. Each language has its own root layout so the `lang` attribute is right before any JavaScript runs.
 
-Everything on the page is server-rendered from `src/content/`. `event-page.tsx` composes sections and nothing else; each section reads the copy for its own language.
+Everything on the page is server-rendered from `src/content/`. `event-page.tsx` and `jams-page.tsx` compose sections and nothing else; each section reads the copy for its own language. The header, footer and language switcher take the page, so a language link keeps the reader on the page they are on.
 
-Four components are client-side, and only for behaviour:
+The Google Jams page shares the tokens, header, footer and reveal motion with the datathon page but has its own section shapes. Its bingo card is plain checkboxes, and CSS `:has()` calls a full line, so it works with JavaScript off. The code puzzle ships as the finished function and only becomes a game once JavaScript runs.
+
+Five components are client-side, and only for behaviour:
 
 | Component | Job |
 |---|---|
@@ -14,12 +16,13 @@ Four components are client-side, and only for behaviour:
 | `motion/drifters.tsx` | The shapes floating over the page. |
 | `sections/gallery.tsx` | Switches the photo rail between scroll-linked and scrollable. |
 | `layout/language-switcher.tsx` | Plain links; no client state. |
+| `ui/code-puzzle.tsx` | The Google Jams warm-up: tap the lines of a function back into order. |
 
 ## Motion
 
 Motion is CSS where it can be, JavaScript where it cannot.
 
-The hero mark's arms animate in once. The hover pulse lives on a nested group, so leaving the mark cannot restart the entry animation. The mark needs `overflow: visible` because the arms start outside its viewBox.
+The chapter mark in the header, footer and datathon hero animates its arms in once. The hover pulse lives on a nested group, so leaving the mark cannot restart the entry animation. The mark needs `overflow: visible` because the arms start outside its viewBox.
 
 Section labels ship as real text in the HTML. On mount each one splits into a `.sr-only` copy carrying the real label and an `aria-hidden` copy that is scrambled, so a reader arrives at a coded label and watches it decode when the section reaches the viewport. Screen readers always get the real text. The `aria-hidden` copy is what animates, and the element collapses back to plain text when it finishes. Under reduced motion nothing is scrambled at all. Putting the real label in `aria-label` would have been simpler but `aria-label` on a paragraph is prohibited and fails an axe audit.
 
