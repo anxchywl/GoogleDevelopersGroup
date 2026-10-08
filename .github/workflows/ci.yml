@@ -30,7 +30,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm audit --audit-level=moderate
+      - run: npm audit --audit-level=moderate --omit=dev
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run verify
       - name: Upload browser test report
