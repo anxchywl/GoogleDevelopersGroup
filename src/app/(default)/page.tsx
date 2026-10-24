@@ -1,3 +1,3 @@
-import { EventPage } from "@/components/event-page";
-export default function Page() { return <EventPage locale="en" />; }
+import { EventsHub } from "@/components/events-hub";
+export default function Page() { return <EventsHub locale="en" />; }
 

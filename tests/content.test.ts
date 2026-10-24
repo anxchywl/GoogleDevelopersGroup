@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { event, jams, packages } from "../src/content/event";
+import { event, eventHistory, jams, packages } from "../src/content/event";
 import { copy } from "../src/content/copy";
 import { locales, localePath } from "../src/content/types";
-import { nextJamWhen, numberShape } from "../src/lib/site";
+import { numberShape } from "../src/lib/site";
 
 function structure(value: unknown): unknown {
   if (typeof value === "string") { expect(value.trim()).not.toBe(""); return "text"; }
@@ -15,6 +15,9 @@ describe("publishable content", () => {
   it("keeps complete and structurally equivalent translations", () => {
     const shape = structure(copy.en);
     for (const locale of locales) expect(structure(copy[locale])).toEqual(shape);
+  });
+  it("keeps the hub copy free of dot separators", () => {
+    for (const locale of locales) expect(copy[locale].hub.eyebrow).not.toContain("·");
   });
   it("keeps prize allocations separate from total package prices", () => {
     for (const pkg of packages) {
@@ -60,6 +63,24 @@ describe("publishable content", () => {
       expect(copy[locale].photos[photo.id as keyof typeof copy.en.photos]).toBeTruthy();
     }
   });
+  it("keeps the event archive broad and every card image sourced", () => {
+    expect(eventHistory.map(({ title }) => title.value)).toContain("Google Talks: How I Got My Internship");
+    expect(eventHistory.map(({ title }) => title.value)).toContain("Google Talks: Road to Research Internships");
+    expect(eventHistory.length).toBeGreaterThan(5);
+    for (const item of eventHistory) {
+      expect(item.title.status).toBe("confirmed");
+      expect(item.title.source).toBeTruthy();
+      expect(item.image.status).toBe("confirmed");
+      expect(item.image.source).toBeTruthy();
+      const file = item.image.value.file;
+      expect(file).toBeTruthy();
+      if (item.postUrl) expect(new URL(item.postUrl).protocol).toBe("https:");
+      for (const locale of locales) {
+        const descriptions = copy[locale].hub.history.images as Record<string, string>;
+        expect(descriptions[item.id] ?? copy[locale].photos[item.id as keyof typeof copy.en.photos]).toBeTruthy();
+      }
+    }
+  });
   it("counts grouped numbers as one value and keeps their shape", () => {
     const grouped = numberShape("1 024")!;
     expect(grouped.target).toBe(1024);
@@ -79,25 +100,32 @@ describe("publishable content", () => {
       }
     }
   });
-  it("dates the next jam from the facts and keeps registration unannounced", () => {
+  it("records the completed jam and keeps the next date unannounced", () => {
     expect(jams.registration.status).toBe("unknown");
-    const { date, start, end } = jams.next.value;
+    expect(jams.next.status).toBe("unknown");
+    const { date, start, end } = jams.last.value;
+    expect(date).toBe("2026-10-22");
     expect(Number.isNaN(Date.parse(date))).toBe(false);
     expect(start < end).toBe(true);
     // the evening plan starts and ends with the announced times
     expect(jams.schedule.value[0]).toBe(start);
     expect(jams.schedule.value.at(-1)).toBe(end);
     for (const locale of locales) {
-      expect(copy[locale].jams.timeRange).toContain("{start}");
-      expect(copy[locale].jams.timeRange).toContain("{end}");
-      const when = nextJamWhen(locale);
-      expect(when).toContain(start);
-      expect(when).toContain(end);
       expect(copy[locale].jams.steps.length).toBe(jams.schedule.value.length - 1);
+      expect(copy[locale].jams.nextAnnouncement).toBeTruthy();
+      expect(copy[locale].jams.completed).toBeTruthy();
+      expect(copy[locale].jams.completedBody).toBeTruthy();
+      expect(copy[locale].jams.dateLabel).toBeTruthy();
+      expect(copy[locale].jams.upcomingLabel).toBeTruthy();
+      expect(copy[locale].jams.upcomingTitle).toBeTruthy();
+      expect(copy[locale].jams.nextBody).toBeTruthy();
+      expect(copy[locale].hub.jams).toContain("22");
     }
   });
   it("routes English, Kazakh, and Russian without browser locale guessing", () => {
     expect(locales.map(locale => localePath(locale))).toEqual(["/", "/kk/", "/ru/"]);
+    expect(locales.map(locale => localePath(locale, "datathon"))).toEqual(["/datathon/", "/kk/datathon/", "/ru/datathon/"]);
     expect(locales.map(locale => localePath(locale, "jams"))).toEqual(["/jams/", "/kk/jams/", "/ru/jams/"]);
+    expect(locales.map(locale => localePath(locale, "events"))).toEqual(["/", "/kk/", "/ru/"]);
   });
 });

@@ -77,7 +77,8 @@ const held = <T>(value: T, source: string) => ({ status: "confirmed" as const, v
 export const jams = {
   name: "Google Jams",
   location: "Nazarbayev University, Astana",
-  next: held({ date: "2026-10-22", start: "18:00", end: "20:00" }, "organizer, confirmed 2026-09-24"),
+  last: held({ date: "2026-10-22", start: "18:00", end: "20:00" }, "user confirmed the event took place on 2026-10-22, 2026-10-28"),
+  next: unknown<{ date: string }>(),
   registration: unknown<string>(),
   telegram: "https://t.me/gdsc_nu",
   // 20 minute warm-up and 10 minute coffee break from the organizer; the case and pitching split the rest
@@ -85,3 +86,57 @@ export const jams = {
   criteria: held(["feasibility", "creativity", "process", "expenses", "scalability"] as const, jamsDeck + ", slides 9 to 12"),
   warmups: held(["puzzles", "bingo"] as const, jamsDeck + ", slides 6 and 7"),
 };
+
+const historySource = "organizer-provided event photo archive in " + proposal;
+const historyYear = "user-provided event list, 2026-10-28";
+const historyFact = <T>(value: T, source: string) => ({ status: "confirmed" as const, value, source });
+
+export const eventHistory = [
+  {
+    id: "internship-talk",
+    title: historyFact("Google Talks: How I Got My Internship", historyYear),
+    year: historyFact(2026, historyYear),
+    image: historyFact(event.photos.find((photo) => photo.id === "talks")!, historySource),
+    postUrl: null,
+  },
+  {
+    id: "research-internships",
+    title: historyFact("Google Talks: Road to Research Internships", "Telegram post https://t.me/gdsc_nu/393"),
+    year: historyFact(2026, "Telegram post https://t.me/gdsc_nu/393"),
+    image: historyFact({ id: "research-internships", file: "talks-internships-2026", width: 640, height: 800 }, "Telegram post https://t.me/gdsc_nu/393"),
+    postUrl: "https://t.me/gdsc_nu/393",
+  },
+  {
+    id: "google-jams-2026",
+    title: historyFact("Google Jams", "Telegram post https://t.me/gdsc_nu/408"),
+    year: historyFact(2026, historyYear),
+    image: historyFact({ id: "google-jams-2026", file: "google-jams-2026", width: 640, height: 800 }, "Telegram post https://t.me/gdsc_nu/408"),
+    postUrl: "https://t.me/gdsc_nu/408",
+  },
+  {
+    id: "off-script",
+    title: historyFact("Google Talks: OFF-SCRIPT", "Telegram post https://t.me/gdsc_nu/402"),
+    year: historyFact(2026, historyYear),
+    image: historyFact({ id: "off-script", file: "off-script-2026", width: 640, height: 800 }, "Telegram post https://t.me/gdsc_nu/402"),
+    postUrl: "https://t.me/gdsc_nu/402",
+  },
+  {
+    id: "nuca-gdg",
+    title: historyFact("NUCA × GDG", "Telegram post https://t.me/gdsc_nu/406"),
+    year: historyFact(2026, historyYear),
+    image: historyFact({ id: "nuca-gdg", file: "nuca-gdg-2026", width: 533, height: 800 }, "Telegram post https://t.me/gdsc_nu/406"),
+    postUrl: "https://t.me/gdsc_nu/406",
+  },
+  ...[
+    { id: "devfest", title: "DevFest" },
+    { id: "talks", title: "Google Talks" },
+    { id: "mentoring", title: "NeHackathon" },
+    { id: "workshop", title: "Campus workshop" },
+    { id: "solutions", title: "Google Solutions Challenge" },
+  ].map(({ id, title }) => ({
+    id,
+    title: historyFact(title, historySource),
+    image: historyFact(event.photos.find((photo) => photo.id === id)!, historySource),
+    postUrl: null,
+  })),
+];

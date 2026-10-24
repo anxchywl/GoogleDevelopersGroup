@@ -1,12 +1,12 @@
-import { event, jams } from "@/content/event";
+import { event } from "@/content/event";
 import { copy } from "@/content/copy";
 import type { Locale, PageId } from "@/content/types";
 
 export const navIds = ["value", "event", "packages", "community"] as const;
 export const jamsNavIds = ["about", "format", "join", "next"] as const;
 export const pageNav = (locale: Locale, page: PageId) => {
-  const labels = page === "jams" ? copy[locale].jams.nav : copy[locale].nav;
-  const ids = page === "jams" ? jamsNavIds : navIds;
+  const labels = page === "jams" ? copy[locale].jams.nav : page === "events" ? copy[locale].hub.nav : copy[locale].nav;
+  const ids = page === "jams" ? jamsNavIds : page === "events" ? ["event-list"] : navIds;
   return labels.map((label, i) => ({ id: ids[i], label }));
 };
 export const navLabel: Record<Locale, string> = {
@@ -21,13 +21,6 @@ export const money = (locale: Locale, value: number) =>
   new Intl.NumberFormat(intlTag[locale], { style: "currency", currency: "KZT", maximumFractionDigits: 0 }).format(value);
 
 export const plain = (locale: Locale, value: number) => new Intl.NumberFormat(intlTag[locale]).format(value);
-
-// "22 October, 18:00 to 20:00" in the reader's language
-export const nextJamWhen = (locale: Locale) => {
-  const { date, start, end } = jams.next.value;
-  const day = new Intl.DateTimeFormat(intlTag[locale], { day: "numeric", month: "long" }).format(new Date(date));
-  return `${day}, ${copy[locale].jams.timeRange.replace("{start}", start).replace("{end}", end)}`;
-};
 
 // a ticket stub shows the day large and the month and year small
 export const stubDate = (locale: Locale, iso: string) => ({

@@ -19,8 +19,9 @@ export type Sponsor = { name: string; url: string; logo: string; permission: Per
 export type PastPartner = { name: string; logo: string; url: string | null; source: string };
 export type Photo = { id: string; file: string; width: number; height: number };
 export type SocialLink = { id: "instagram" | "telegram" | "email"; handle: string; url: string };
-export type PageId = "datathon" | "jams";
-export function localePath(locale: Locale, page: PageId = "datathon") {
+export type PageId = "datathon" | "jams" | "events";
+export function localePath(locale: Locale, page: PageId = "events") {
   const root = locale === "en" ? "/" : `/${locale}/`;
-  return page === "jams" ? `${root}jams/` : root;
+  if (page === "events") return root;
+  return `${root}${page}/`;
 }

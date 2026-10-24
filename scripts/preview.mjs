@@ -4,7 +4,7 @@ import path from "node:path";
 
 const root = path.resolve("out");
 const headers = JSON.parse(await readFile("security/headers.json", "utf8"));
-const types = { ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8", ".css":"text/css; charset=utf-8", ".json":"application/json", ".txt":"text/plain; charset=utf-8", ".svg":"image/svg+xml", ".png":"image/png", ".webp":"image/webp", ".woff2":"font/woff2", ".ttf":"font/ttf", ".ico":"image/x-icon" };
+const types = { ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8", ".css":"text/css; charset=utf-8", ".json":"application/json", ".txt":"text/plain; charset=utf-8", ".svg":"image/svg+xml", ".png":"image/png", ".jpg":"image/jpeg", ".jpeg":"image/jpeg", ".webp":"image/webp", ".woff2":"font/woff2", ".ttf":"font/ttf", ".ico":"image/x-icon" };
 createServer(async (request, response) => {
   for (const [key, value] of Object.entries(headers)) response.setHeader(key, value);
   response.setHeader("Cache-Control", "no-cache");

@@ -3,9 +3,9 @@ import type { Locale } from "./types";
 const en = {
   language: "Language", skip: "Skip to content", home: "Back to the top of the page",
   nav: ["Value", "Event", "Packages", "Community"],
-  partner: "Become a partner", seePackages: "See the packages",
+  partner: "Become a partner", emailCta: "Email us", seePackages: "See the packages",
   by: "by Google Developer Groups on Campus",
-  byline: "GOOGLE DEVELOPER GROUPS / ON CAMPUS NAZARBAYEV UNIVERSITY",
+  byline: "Google Developer Groups / On Campus Nazarbayev University",
   heroLead: "A 48-hour datathon for 300+ of the strongest IT and mathematics students in Kazakhstan. We are looking for the company that brings the case and the prize fund.",
   place: "Nazarbayev University, Astana", date: "Dates to be announced",
   stats: [
@@ -64,13 +64,31 @@ const en = {
   partnersLabel: "Companies that have worked with us",
 
   footerEvents: "Our events",
+  hub: {
+    nav: ["Events"], eyebrow: "GDG ON CAMPUS AT NAZARBAYEV UNIVERSITY",
+    title: "Explore GDG events", intro: "Browse our events and open a page for details",
+    datathon: "A proposed 48-hour datathon focused on software engineering, machine learning and data science",
+    jams: "The 22 October jam is over. The next date will be announced soon.",
+    open: "Open event", label: "EVENT", headerCta: "Follow our channel", back: "Back to the main site",
+    history: {
+      eyebrow: "FROM OUR ARCHIVE", title: "Moments from our events", intro: "Talks, workshops and competitions from our campus community",
+      previous: "Previous events", next: "Next events", viewPost: "View post", archive: "From the archive",
+      images: {
+        "internship-talk": "A speaker giving a talk onstage at a campus event",
+        "research-internships": "Google Talks poster for Road to Research Internships",
+        "google-jams-2026": "Google Jams event post with its format and schedule",
+        "off-script": "Google Talks OFF-SCRIPT poster featuring two speakers",
+        "nuca-gdg": "NUCA CTF announcement co-hosted with GDG",
+      },
+    },
+  },
   jams: {
     nav: ["About", "Format", "Join", "Next jam"],
     headerCta: "Join the channel",
     tagline: "Students and professors on one team.",
     heroLead: "A short case competition at Nazarbayev University. Students and professors work in mixed teams on one real problem and pitch their solution to a panel.",
     studentCta: "I am a student", professorCta: "I am a professor",
-    next: "Next jam", timeRange: "{start} to {end}",
+    nextAnnouncement: "The next date will be announced soon.",
     table: { students: "Students", professors: "Professors", case: "CASE" },
 
     aboutLabel: "01 / WHAT IT IS", aboutTitle: "A case competition\nwith your professors.",
@@ -86,7 +104,7 @@ const en = {
     },
 
     formatLabel: "02 / HOW IT RUNS", formatTitle: "Warm up. Solve.\nPitch.",
-    formatBody: "The plan for the next jam.",
+    formatBody: "The 22 October jam ran from 18:00 to 20:00.",
     minutes: "min",
     steps: [
       { title: "Warm-up", body: "Code puzzles and bingo." },
@@ -117,7 +135,7 @@ const en = {
     students: {
       tag: "FOR STUDENTS", title: "Work next to your professors.",
       benefits: ["Solve a real problem with professors on your team", "Meet new people during the warm-up games", "Practise pitching in front of a panel", "No finished product needed. Slides, a PDF or a demo link are enough", "Prizes for the winners, coffee for everyone"],
-      cta: "Follow the channel for registration",
+      cta: "Follow for the next date",
     },
     professors: {
       tag: "FOR PROFESSORS", title: "Two hours. Nothing to prepare.",
@@ -125,8 +143,11 @@ const en = {
       cta: "Write to us",
     },
 
-    nextLabel: "04 / NEXT JAM", nextTitle: "Save\nthe date.",
-    nextBody: "The registration link will be posted in our Telegram channel.",
+    nextLabel: "04 / WHAT'S NEXT", nextTitle: "See you at the next jam.",
+    completed: "COMPLETED", completedTitle: "Google Jams",
+    completedBody: "The 22 October jam is over.",
+    dateLabel: "NEXT DATE", upcomingLabel: "UPCOMING", upcomingTitle: "Next jam",
+    nextBody: "The next date will be announced soon. Follow our Telegram channel for updates.",
     runByLabel: "WHO RUNS IT", runBy: "Google Jams is run by GDG on Campus Nazarbayev University, the team behind DevFest, Google Talks and NeHackathon on campus.",
   },
 
@@ -140,7 +161,7 @@ const kk: typeof en = {
   nav: ["Пайда", "Іс-шара", "Пакеттер", "Қауымдастық"],
   partner: "Серіктес болу", seePackages: "Пакеттерді көру",
   by: "Google Developer Groups on Campus ұйымдастырады",
-  byline: "GOOGLE DEVELOPER GROUPS / ON CAMPUS NAZARBAYEV UNIVERSITY",
+  byline: "Google Developer Groups / On Campus Nazarbayev University",
   heroLead: "Қазақстандағы ең күшті IT және математика студенттерінің 300-ден астамына арналған 48 сағаттық дататон. Кейс пен жүлде қорын ұсынатын компанияны іздеп жатырмыз.",
   place: "Назарбаев Университеті, Астана", date: "Күндері кейін жарияланады",
   stats: [
@@ -199,13 +220,31 @@ const kk: typeof en = {
   partnersLabel: "Бізбен жұмыс істеген компаниялар",
 
   footerEvents: "Іс-шараларымыз",
+  hub: {
+    nav: ["Іс-шаралар"], eyebrow: "GDG ON CAMPUS НАЗАРБАЕВ УНИВЕРСИТЕТІНДЕ",
+    title: "GDG іс-шаралары", intro: "Іс-шараларымызды қарап, толық мәлімет алу үшін беттерін ашыңыз",
+    datathon: "Бағдарламалық инженерия, машиналық оқыту және деректер ғылымына арналған ұсынылып отырған 48 сағаттық дататон",
+    jams: "22 қазандағы джем өтті. Келесі джемнің күні жақында жарияланады.",
+    open: "Іс-шараны ашу", label: "ІС-ШАРА", headerCta: "Арнаға жазылыңыз", back: "Басты бетке оралу",
+    history: {
+      eyebrow: "ІС-ШАРАЛАР ЖЫЛНАМАСЫ", title: "Іс-шаралардан естеліктер", intro: "Кампусымыздағы баяндамалар, воркшоптар және жарыстар",
+      previous: "Алдыңғы іс-шаралар", next: "Келесі іс-шаралар", viewPost: "Жазбаны көру", archive: "Архивтен",
+      images: {
+        "internship-talk": "Кампус іс-шарасында сахнада баяндама жасап тұрған спикер",
+        "research-internships": "Road to Research Internships туралы Google Talks постері",
+        "google-jams-2026": "Форматы мен кестесі көрсетілген Google Jams жазбасы",
+        "off-script": "Екі спикері бар Google Talks OFF-SCRIPT постері",
+        "nuca-gdg": "GDG бірлесіп өткізген NUCA CTF хабарландыруы",
+      },
+    },
+  },
   jams: {
     nav: ["Туралы", "Формат", "Қатысу", "Күні"],
     headerCta: "Арнаға жазылу",
     tagline: "Студенттер мен профессорлар бір командада.",
     heroLead: "Назарбаев Университетіндегі қысқа кейс-чемпионат. Студенттер мен профессорлар аралас командаларда бір нақты мәселенің үстінде жұмыс істеп, шешімін қазылар алқасына ұсынады.",
     studentCta: "Мен студентпін", professorCta: "Мен профессормын",
-    next: "Келесі джем", timeRange: "{start}-ден {end}-ге дейін",
+    nextAnnouncement: "Келесі джемнің күні жақында жарияланады.",
     table: { students: "Студенттер", professors: "Профессорлар", case: "КЕЙС" },
 
     aboutLabel: "01 / БҰЛ НЕ", aboutTitle: "Профессорлармен\nбірге кейс-чемпионат.",
@@ -221,7 +260,7 @@ const kk: typeof en = {
     },
 
     formatLabel: "02 / ҚАЛАЙ ӨТЕДІ", formatTitle: "Жаттығу. Шешім.\nПитч.",
-    formatBody: "Келесі джемнің жоспары.",
+    formatBody: "22 қазандағы джем 18:00-ден 20:00-ге дейін өтті.",
     minutes: "мин",
     steps: [
       { title: "Жаттығу", body: "Код жұмбақтары мен бинго." },
@@ -252,7 +291,7 @@ const kk: typeof en = {
     students: {
       tag: "СТУДЕНТТЕРГЕ", title: "Профессорлармен қатар жұмыс істеңіз.",
       benefits: ["Командаңыздағы профессорлармен бірге нақты мәселені шешіңіз", "Жаттығу ойындарында жаңа адамдармен танысыңыз", "Қазылар алдында питч жасап жаттығыңыз", "Дайын өнім қажет емес. Слайдтар, PDF немесе демо сілтеме жеткілікті", "Жеңімпаздарға жүлде, барлығына кофе"],
-      cta: "Тіркелу үшін арнаға жазылыңыз",
+      cta: "Келесі күн үшін арнаға жазылыңыз",
     },
     professors: {
       tag: "ПРОФЕССОРЛАРҒА", title: "Екі сағат. Дайындалудың қажеті жоқ.",
@@ -260,14 +299,17 @@ const kk: typeof en = {
       cta: "Бізге жазыңыз",
     },
 
-    nextLabel: "04 / КЕЛЕСІ ДЖЕМ", nextTitle: "Күнді\nбелгілеп қойыңыз.",
-    nextBody: "Тіркелу сілтемесі Telegram арнамызда жарияланады.",
+    nextLabel: "04 / КЕЛЕСІСІ ҚАНДАЙ", nextTitle: "Келесі джемде кездескенше.",
+    completed: "АЯҚТАЛДЫ", completedTitle: "Google Jams",
+    completedBody: "22 қазандағы джем аяқталды.",
+    dateLabel: "КЕЛЕСІ КҮН", upcomingLabel: "АЛДА", upcomingTitle: "Келесі джем",
+    nextBody: "Келесі күн жақында жарияланады. Жаңалықтар үшін Telegram арнасына жазылыңыз.",
     runByLabel: "КІМ ӨТКІЗЕДІ", runBy: "Google Jams-ты GDG on Campus Nazarbayev University өткізеді. Кампустағы DevFest, Google Talks және NeHackathon-ды да осы команда ұйымдастырған.",
   },
 
   footerContact: "Байланыс",
   sourceCode: "GitHub-та ашық код", rights: "GDG on Campus Nazarbayev University",
-  emailLabel: "Пошта", instagramLabel: "Instagram", telegramLabel: "Telegram",
+  emailLabel: "Пошта", emailCta: "Бізге жазыңыз", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
 
 const ru: typeof en = {
@@ -275,7 +317,7 @@ const ru: typeof en = {
   nav: ["Польза", "Событие", "Пакеты", "Сообщество"],
   partner: "Стать партнёром", seePackages: "Посмотреть пакеты",
   by: "организует Google Developer Groups on Campus",
-  byline: "GOOGLE DEVELOPER GROUPS / ON CAMPUS NAZARBAYEV UNIVERSITY",
+  byline: "Google Developer Groups / On Campus Nazarbayev University",
   heroLead: "48-часовой дататон для 300+ сильнейших студентов IT и математики Казахстана. Ищем компанию, которая принесёт кейс и призовой фонд.",
   place: "Назарбаев Университет, Астана", date: "Даты будут объявлены",
   stats: [
@@ -334,13 +376,31 @@ const ru: typeof en = {
   partnersLabel: "Компании, которые уже работали с нами",
 
   footerEvents: "Наши события",
+  hub: {
+    nav: ["События"], eyebrow: "GDG ON CAMPUS В НАЗАРБАЕВ УНИВЕРСИТЕТЕ",
+    title: "События GDG", intro: "Посмотрите наши события и откройте страницу с подробностями",
+    datathon: "Предлагаемый 48-часовой дататон по программной инженерии, машинному обучению и анализу данных",
+    jams: "Джем 22 октября уже прошёл. Дату следующего объявим скоро.",
+    open: "Открыть событие", label: "СОБЫТИЕ", headerCta: "Подписаться на канал", back: "На главную",
+    history: {
+      eyebrow: "ИЗ АРХИВА", title: "Моменты наших событий", intro: "Лекции, воркшопы и конкурсы нашего кампуса",
+      previous: "Предыдущие события", next: "Следующие события", viewPost: "Открыть пост", archive: "Из архива",
+      images: {
+        "internship-talk": "Спикер выступает на сцене во время мероприятия кампуса",
+        "research-internships": "Постер Google Talks о пути к исследовательской стажировке",
+        "google-jams-2026": "Пост Google Jams с описанием формата и расписания",
+        "off-script": "Постер Google Talks OFF-SCRIPT с двумя спикерами",
+        "nuca-gdg": "Анонс NUCA CTF совместно с GDG",
+      },
+    },
+  },
   jams: {
     nav: ["О джемах", "Формат", "Участие", "Дата"],
     headerCta: "Подписаться",
     tagline: "Студенты и профессора в одной команде.",
     heroLead: "Короткий кейс-чемпионат в Назарбаев Университете. Студенты и профессора работают в смешанных командах над одной реальной задачей и защищают решение перед жюри.",
     studentCta: "Я студент", professorCta: "Я профессор",
-    next: "Следующий джем", timeRange: "с {start} до {end}",
+    nextAnnouncement: "Дату следующего джема объявим скоро.",
     table: { students: "Студенты", professors: "Профессора", case: "КЕЙС" },
 
     aboutLabel: "01 / ЧТО ЭТО", aboutTitle: "Кейс-чемпионат\nвместе с профессорами.",
@@ -356,7 +416,7 @@ const ru: typeof en = {
     },
 
     formatLabel: "02 / КАК ЭТО ПРОХОДИТ", formatTitle: "Разминка. Решение.\nПитч.",
-    formatBody: "План следующего джема.",
+    formatBody: "Джем 22 октября проходил с 18:00 до 20:00.",
     minutes: "мин",
     steps: [
       { title: "Разминка", body: "Код-пазлы и бинго." },
@@ -387,7 +447,7 @@ const ru: typeof en = {
     students: {
       tag: "СТУДЕНТАМ", title: "Работайте бок о бок с профессорами.",
       benefits: ["Решите реальную задачу вместе с профессорами в своей команде", "Познакомьтесь с новыми людьми во время разминки", "Потренируйте питч перед жюри", "Готовый продукт не нужен. Достаточно слайдов, PDF или ссылки на демо", "Призы победителям и кофе для всех"],
-      cta: "Подписаться на канал с регистрацией",
+      cta: "Подписаться, чтобы узнать следующую дату",
     },
     professors: {
       tag: "ПРОФЕССОРАМ", title: "Два часа. Готовиться не нужно.",
@@ -395,14 +455,17 @@ const ru: typeof en = {
       cta: "Написать нам",
     },
 
-    nextLabel: "04 / СЛЕДУЮЩИЙ ДЖЕМ", nextTitle: "Запишите\nдату.",
-    nextBody: "Ссылку на регистрацию мы опубликуем в Telegram-канале.",
+    nextLabel: "04 / ЧТО ДАЛЬШЕ", nextTitle: "До встречи на следующем джеме.",
+    completed: "ЗАВЕРШЕНО", completedTitle: "Google Jams",
+    completedBody: "Джем 22 октября уже завершился.",
+    dateLabel: "СЛЕДУЮЩАЯ ДАТА", upcomingLabel: "СКОРО", upcomingTitle: "Следующий джем",
+    nextBody: "Дату следующего объявим скоро. Следите за новостями в нашем Telegram-канале.",
     runByLabel: "КТО ПРОВОДИТ", runBy: "Google Jams проводит GDG on Campus Nazarbayev University. Та же команда делала в кампусе DevFest, Google Talks и NeHackathon.",
   },
 
   footerContact: "Связаться",
   sourceCode: "Открытый код на GitHub", rights: "GDG on Campus Nazarbayev University",
-  emailLabel: "Почта", instagramLabel: "Instagram", telegramLabel: "Telegram",
+  emailLabel: "Почта", emailCta: "Напишите нам", instagramLabel: "Instagram", telegramLabel: "Telegram",
 };
 
 export const copy: Record<Locale, typeof en> = { en, kk, ru };

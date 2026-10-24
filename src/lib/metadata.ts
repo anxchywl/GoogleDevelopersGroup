@@ -7,8 +7,9 @@ export function metadata(locale: Locale, page: PageId = "datathon"): Metadata {
   const c = copy[locale];
   const origin = event.canonicalUrl.status === "confirmed" ? event.canonicalUrl.value : null;
   const isJams = page === "jams";
-  const name = isJams ? jams.name : event.name;
-  const description = isJams ? c.jams.heroLead : c.heroLead;
+  const isEvents = page === "events";
+  const name = isEvents ? c.footerEvents : isJams ? jams.name : event.name;
+  const description = isEvents ? c.hub.intro : isJams ? c.jams.heroLead : c.heroLead;
   const image = isJams ? "/og-jams.png" : "/og.png";
   const path = (target: Locale) => localePath(target, page);
   return {

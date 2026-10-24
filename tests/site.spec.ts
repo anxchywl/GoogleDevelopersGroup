@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
+import { copy } from "../src/content/copy";
 
 // contrast is judged on the settled page, not on a frame of an entrance animation
 async function settle(page: Page) {
@@ -8,15 +9,22 @@ async function settle(page: Page) {
     .filter(animation => animation.effect?.getComputedTiming().iterations !== Infinity)
     .map(animation => animation.finished.catch(() => undefined))));
 }
+async function expectChapterBrand(page: Page) {
+  await expect(page.locator("header .wordmark-text b")).toHaveText("GDG on Campus");
+  await expect(page.locator("header .wordmark-text small")).toHaveText("Nazarbayev University, Astana");
+}
 
-const routes = [{ locale:"en",path:"/" }, {locale:"kk",path:"/kk/"}, {locale:"ru",path:"/ru/"}];
-for (const route of routes) {
+const datathonRoutes = [{ locale:"en",path:"/datathon/" }, {locale:"kk",path:"/kk/datathon/"}, {locale:"ru",path:"/ru/datathon/"}] as const;
+const routes = [{ locale:"en",path:"/" }, {locale:"kk",path:"/kk/"}, {locale:"ru",path:"/ru/"}] as const;
+const jamsRoutes = [{ locale:"en",path:"/jams/" }, {locale:"kk",path:"/kk/jams/"}, {locale:"ru",path:"/ru/jams/"}] as const;
+for (const route of datathonRoutes) {
   test(route.locale + " renders accessible complete content", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", error => errors.push(error.message));
     page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
     await page.goto(route.path);
     await expect(page.locator("html")).toHaveAttribute("lang", route.locale);
+    await expectChapterBrand(page);
     await expect(page.locator("h1")).toContainText("Datathon");
     await expect(page.locator(".track-card")).toHaveCount(2);
     await expect(page.locator(".days li")).toHaveCount(2);
@@ -33,7 +41,83 @@ for (const route of routes) {
     expect(errors).toEqual([]);
   });
 }
-const jamsRoutes = [{ locale:"en",path:"/jams/" }, {locale:"kk",path:"/kk/jams/"}, {locale:"ru",path:"/ru/jams/"}];
+const eventsRoutes = routes.map((route) => ({ ...route, event:`${route.path}datathon/`, jams:`${route.path}jams/` }));
+for (const route of eventsRoutes) {
+  test(route.locale + " event hub links to both event pages", async ({ page }) => {
+    await page.goto(route.path);
+    await expect(page.locator("html")).toHaveAttribute("lang", route.locale);
+    await expectChapterBrand(page);
+    await expect(page.locator("header .wordmark")).toHaveAttribute("href", "#top");
+    await expect(page.locator("header .primary-nav")).toHaveCount(0);
+    await expect(page.locator(".hub-card")).toHaveCount(2);
+    await expect(page.locator(".hub-card-datathon")).toHaveAttribute("href", route.event);
+    await expect(page.locator(".hub-card-jams")).toHaveAttribute("href", route.jams);
+    const archiveLabel = page.locator(".history-head .eyebrow");
+    await expect.poll(() => archiveLabel.textContent()).toBe(copy[route.locale].hub.history.eyebrow);
+    await expect(page.locator(".history-head")).toHaveAttribute("data-visible", "true");
+    const titleOverlapsCards = await page.evaluate(() => {
+      if (!window.matchMedia("(min-width: 961px)").matches) return false;
+      const title = document.querySelector(".hub-intro h1");
+      const cards = document.querySelector(".hub-list");
+      if (!title || !cards) return true;
+      const range = document.createRange();
+      range.selectNodeContents(title);
+      const textRight = Math.max(...Array.from(range.getClientRects(), rect => rect.right));
+      return textRight > cards.getBoundingClientRect().left;
+    });
+    expect(titleOverlapsCards).toBe(false);
+    await settle(page);
+    const audit = await new AxeBuilder({page}).withTags(["wcag2a","wcag2aa","wcag21aa"]).analyze();
+    expect(audit.violations).toEqual([]);
+    await page.locator("header .wordmark").click();
+    await expect(page).toHaveURL(route.path);
+  });
+}
+
+test("event history shows the full archive and its controls move the rail", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/");
+  const rail = page.locator(".history-rail");
+  const cards = rail.locator(".history-card");
+  await expect(cards).toHaveCount(10);
+  await expect(cards.locator("img")).toHaveCount(10);
+  await expect(cards.locator("img").first()).toHaveAttribute("alt", /.+/);
+  await expect(page.getByRole("heading", {name:"Moments from our events"})).toBeVisible();
+  await expectChapterBrand(page);
+  await expect(page.locator(".history-controls")).toBeVisible();
+  const before = await rail.evaluate(el => el.scrollLeft);
+  await page.getByRole("button", {name:"Next events"}).click();
+  await expect.poll(() => rail.evaluate(el => el.scrollLeft)).toBeGreaterThan(before);
+});
+
+test("channel actions use a compact Telegram label in every language", async ({ page }) => {
+  for (const route of eventsRoutes) {
+    await page.goto(route.path);
+    const action = page.locator(".header-cta-channel");
+    await expect(action).toHaveText("Telegram");
+    await expect(action.locator(".brand-icon")).toHaveCount(0);
+    await expect(action).toHaveAttribute("aria-label", copy[route.locale].hub.headerCta);
+    expect(await action.evaluate(element => element.getBoundingClientRect().width)).toBeLessThan(180);
+  }
+  for (const route of jamsRoutes) {
+    await page.goto(route.path);
+    const action = page.locator(".header-cta-channel");
+    await expect(action).toHaveText("Telegram");
+    await expect(action.locator(".brand-icon")).toHaveCount(0);
+    await expect(action).toHaveAttribute("aria-label", copy[route.locale].jams.headerCta);
+    expect(await action.evaluate(element => element.getBoundingClientRect().width)).toBeLessThan(180);
+  }
+});
+
+test("the event hub remains within the viewport on phones", async ({ page }, info) => {
+  test.skip(info.project.name !== "mobile", "viewport overflow is already covered in the mobile project");
+  await page.goto("/");
+  await expect(page.locator(".history-card")).toHaveCount(10);
+  await expect(page.locator(".site-header")).toHaveCSS("border-bottom-width", "0px");
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+  expect(overflow).toBe(false);
+});
+
 for (const route of jamsRoutes) {
   test(route.locale + " jams page renders accessible complete content", async ({ page }) => {
     const errors: string[] = [];
@@ -41,11 +125,21 @@ for (const route of jamsRoutes) {
     page.on("console", message => { if (message.type() === "error") errors.push(message.text()); });
     await page.goto(route.path);
     await expect(page.locator("html")).toHaveAttribute("lang", route.locale);
+    await expectChapterBrand(page);
     await expect(page.locator("h1")).toContainText("Google Jams");
+    await expect(page.locator(".jam-hero-where")).toContainText(copy[route.locale].jams.nextAnnouncement);
+    await expect(page.locator(".jam-hero-where")).not.toContainText("Last jam");
+    await expect(page.locator("#next .ticket-completed .ticket-status")).toHaveText(copy[route.locale].jams.completed);
+    await expect(page.locator("#next .ticket-completed .ticket-day")).toHaveText("22");
+    await expect(page.locator("#next .ticket-completed .ticket-month")).toContainText("2026");
+    await expect(page.locator("#next .ticket-completed")).not.toContainText("18:00");
+    await expect(page.locator("#next .ticket-upcoming .ticket-tba")).toHaveText("TBA");
+    await expect(page.locator("#next .ticket-upcoming .ticket-status")).toHaveText(copy[route.locale].jams.upcomingLabel);
+    await expect(page.locator("#next .ticket-upcoming")).toContainText(copy[route.locale].jams.nextBody);
     await expect(page.locator(".timebar > div")).toHaveCount(4);
     await expect(page.locator(".jury-sheet tbody tr")).toHaveCount(5);
     await expect(page.locator(".bingo input[type=checkbox]")).toHaveCount(9);
-    await expect(page.locator(".ticket")).toHaveCount(1);
+    await expect(page.locator(".ticket")).toHaveCount(2);
     await expect(page.locator(".jam-ticker, .case-file, .rules")).toHaveCount(0);
     await expect(page.locator("header .wordmark .gdg-mark, footer .wordmark .gdg-mark, .split-badge .gdg-mark")).toHaveCount(3);
     await expect(page.locator(".compare tbody tr")).toHaveCount(4);
@@ -64,7 +158,7 @@ test("language links keep the reader on the jams page", async ({ page }) => {
   await expect(page).toHaveURL(/\/ru\/jams\/$/);
   await expect(page.locator("h1")).toContainText("Google Jams");
   await page.locator("footer").getByRole("link", {name:"Google Datathon"}).click();
-  await expect(page).toHaveURL(/\/ru\/$/);
+  await expect(page).toHaveURL(/\/ru\/datathon\/$/);
 });
 test("jams nav and hero buttons land on their sections", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
@@ -105,13 +199,13 @@ test("section labels decode cleanly on the jams page", async ({ page }) => {
   }
 });
 test("the header and footer carry the chapter mark on both pages", async ({ page }) => {
-  for (const path of ["/", "/jams/"]) {
+  for (const path of ["/datathon/", "/jams/"]) {
     await page.goto(path);
     await expect(page.locator("header .wordmark .gdg-mark")).toHaveCount(1);
     await expect(page.locator("footer .wordmark .gdg-mark")).toHaveCount(1);
     await expect(page.locator("footer")).not.toContainText("Next jam");
   }
-  await page.goto("/");
+  await page.goto("/datathon/");
   await expect(page.locator(".hero .gdg-mark.hero-mark")).toHaveCount(1);
 });
 test("blocks below the fold wait hidden and the time bar grows from empty", async ({ page }) => {
@@ -182,7 +276,7 @@ test("the photo rail follows page scroll when motion is allowed", async ({ page 
   test.skip(info.project.name === "mobile", "touch screens keep the swipeable rail");
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const shift = () => page.locator(".gallery-rail ul").evaluate(el => Math.round(parseFloat(getComputedStyle(el).translate) || 0));
   await page.locator("#community").scrollIntoViewIfNeeded();
   await expect(page.locator(".gallery-rail")).toHaveAttribute("data-linked","true");
@@ -194,7 +288,7 @@ test("the photo rail follows page scroll when motion is allowed", async ({ page 
 test("touch screens can swipe the photo rail", async ({ page }, info) => {
   test.skip(info.project.name !== "mobile", "needs a touch device");
   await page.emulateMedia({reducedMotion:"no-preference"});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const rail = page.locator(".gallery-rail");
   await rail.scrollIntoViewIfNeeded();
   await expect(rail).not.toHaveAttribute("data-linked");
@@ -205,7 +299,7 @@ test("phones keep the shapes in the opening section and let a finger carry one",
   test.skip(info.project.name !== "desktop", "raw touch input needs Chromium; runs once");
   const context = await browser.newContext({ viewport:{width:360,height:780}, hasTouch:true, isMobile:true, reducedMotion:"no-preference" });
   const page = await context.newPage();
-  await page.goto(baseURL + "/");
+  await page.goto(baseURL + "/datathon/");
   const shapes = page.locator(".drifters span:visible");
   await expect(shapes).toHaveCount(9);
   const top = () => shapes.first().evaluate(el => el.getBoundingClientRect().top + window.scrollY);
@@ -240,7 +334,7 @@ test("phones step through the languages with one button", async ({ page }) => {
 test("section labels ship scrambled and decode when the section arrives", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const label = page.locator("#value .eyebrow");
   // the screen-reader copy always carries the real label, whatever the visible text is doing
   await expect(label.locator(".sr-only")).toHaveText("01 / WHAT YOU GET");
@@ -250,12 +344,12 @@ test("section labels ship scrambled and decode when the section arrives", async 
 });
 test("reduced motion leaves section labels alone", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
-  await page.goto("/");
+  await page.goto("/datathon/");
   await expect(page.locator("#value .eyebrow")).toHaveText("01 / WHAT YOU GET");
   await expect(page.locator("#value .eyebrow .sr-only")).toHaveCount(0);
 });
 test("every photograph has a localized description", async ({ page }) => {
-  await page.goto("/ru/");
+  await page.goto("/ru/datathon/");
   const alts = await page.locator(".gallery-rail img, .team-shot img").evaluateAll(els => els.map(el => (el as HTMLImageElement).alt));
   expect(alts.length).toBe(6);
   for (const alt of alts) expect(alt.trim().length).toBeGreaterThan(8);
@@ -263,7 +357,7 @@ test("every photograph has a localized description", async ({ page }) => {
 test("the photo rail advances and rewinds when motion is reduced", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
   await page.setViewportSize({width:1440,height:1000});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const rail = page.locator(".gallery-rail");
   await expect(rail).toHaveJSProperty("scrollLeft", 0);
   await page.getByRole("button", {name:"Next photos"}).click();
@@ -273,18 +367,18 @@ test("the photo rail advances and rewinds when motion is reduced", async ({ page
 });
 test("language links open the translated page at the top", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
-  await page.goto("/#packages");
+  await page.goto("/datathon/#packages");
   await page.locator("header").getByRole("link", {name:"Қазақша",exact:true}).click();
-  await expect(page).toHaveURL(/\/kk\/$/);
+  await expect(page).toHaveURL(/\/kk\/datathon\/$/);
   await expect(page.locator("html")).toHaveAttribute("lang","kk");
   expect(await page.evaluate(() => Math.round(window.scrollY))).toBe(0);
   await page.locator("header").getByRole("link", {name:"Русский",exact:true}).click();
-  await expect(page).toHaveURL(/\/ru\/$/);
+  await expect(page).toHaveURL(/\/ru\/datathon\/$/);
 });
 test("both marks ease back to rest when the cursor leaves", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
-  await page.goto("/");
+  await page.goto("/datathon/");
   for (const [target, part, prop] of [["header .gdg-mark",".gdg-pulse","scale"],[".hero-mark",".gdg-pulse","scale"]] as const) {
     const mark = page.locator(target);
     const box = (await mark.boundingBox())!;
@@ -305,7 +399,7 @@ test("both marks ease back to rest when the cursor leaves", async ({ page }) => 
 test("the cursor can knock a drifting shape out of its place", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"no-preference"});
   await page.setViewportSize({width:1440,height:1000});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const shape = page.locator(".drifters span").first();
   const at = () => shape.evaluate(el => el.getBoundingClientRect().left);
   await expect.poll(at).toBeGreaterThan(0);
@@ -323,10 +417,38 @@ test("the header keeps its width when the language changes", async ({ page }) =>
   const widths = [await box("/"), await box("/kk/"), await box("/ru/")];
   expect(new Set(widths).size).toBe(1);
 });
+test("the Datathon header uses a compact localized email action", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+  for (const route of datathonRoutes) {
+    await page.goto(route.path);
+    const action = page.locator(".header-cta-email");
+    await expect(action).toHaveText(copy[route.locale].emailCta);
+    await expect(action).toHaveAttribute("href", /^mailto:/);
+    const size = await action.evaluate(element => ({
+      width: Math.round(element.getBoundingClientRect().width),
+      clientWidth: element.clientWidth,
+      scrollWidth: element.scrollWidth,
+      clientHeight: element.clientHeight,
+      scrollHeight: element.scrollHeight,
+    }));
+    expect(size.width).toBeGreaterThanOrEqual(148);
+    expect(size.scrollWidth).toBeLessThanOrEqual(size.clientWidth);
+    expect(size.scrollHeight).toBeLessThanOrEqual(size.clientHeight);
+  }
+});
+test("language controls use text without a filled background", async ({ page }) => {
+  await page.setViewportSize({width:1440,height:1000});
+  await page.goto("/");
+  await expect(page.locator(".language-switcher")).toHaveCSS("border-width", "0px");
+  await expect(page.locator(".language-switcher a[aria-current=page]")).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+  await page.setViewportSize({width:390,height:844});
+  await expect(page.locator(".language-cycle")).toHaveCSS("border-width", "0px");
+  await expect(page.locator(".language-cycle")).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
+});
 test("navigation lands the section heading just under the sticky header", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
   await page.setViewportSize({width:1440,height:1000});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const header = await page.locator(".site-header").evaluate(el => Math.round(el.getBoundingClientRect().height));
   for (const id of ["value","event","packages","community"]) {
     await page.locator(`.primary-nav a[href="#${id}"]`).click();
@@ -337,16 +459,25 @@ test("navigation lands the section heading just under the sticky header", async 
     expect(top, `${id} heading close to header`).toBeLessThan(header + 50);
   }
 });
-test("the wordmark returns to the very top of the page", async ({ page }) => {
+test("the event page wordmark returns to the event hub", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
-  await page.goto("/");
+  await page.goto("/datathon/");
   await page.evaluate(() => window.scrollTo(0, 3000));
   await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(3000);
   await page.locator("header .wordmark").click();
-  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(0);
+  await expect(page).toHaveURL("/");
+  await expect(page.locator("h1")).toContainText("GDG");
+});
+test("the chapter identity stays visible in the sticky header", async ({ page }) => {
+  await page.setViewportSize({width:390,height:844});
+  await page.goto("/datathon/");
+  await expectChapterBrand(page);
+  await page.evaluate(() => window.scrollTo(0, 1200));
+  await expect.poll(() => page.locator(".site-header").evaluate(element => Math.round(element.getBoundingClientRect().top))).toBe(0);
+  await expect(page.locator(".site-header .wordmark-text b")).toBeVisible();
 });
 test("keyboard can skip navigation and operate packages", async ({ page, browserName }) => {
-  await page.goto("/");
+  await page.goto("/datathon/");
   await page.keyboard.press(browserName === "webkit" ? "Alt+Tab" : "Tab");
   await expect(page.locator(".skip-link")).toBeFocused();
   await page.keyboard.press("Enter");
@@ -361,7 +492,7 @@ test("keyboard can skip navigation and operate packages", async ({ page, browser
 test("reduced motion and no-JavaScript preserve the whole experience", async ({ browser, baseURL }) => {
   const context = await browser.newContext({ javaScriptEnabled:false, reducedMotion:"reduce" });
   const page = await context.newPage();
-  await page.goto(baseURL + "/kk/");
+  await page.goto(baseURL + "/kk/datathon/");
   await expect(page.locator("html")).toHaveAttribute("lang","kk");
   await expect(page.locator(".days li").last()).toBeVisible();
   await expect(page.locator(".gallery-rail li").first()).toBeVisible();
@@ -373,7 +504,7 @@ test("reduced motion and no-JavaScript preserve the whole experience", async ({ 
 });
 test("reduced motion stops animations and smooth scrolling", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"reduce"});
-  await page.goto("/");
+  await page.goto("/datathon/");
   const result = await page.evaluate(() => ({
     scroll:getComputedStyle(document.documentElement).scrollBehavior,
     running:document.getAnimations().filter(a=>a.playState==="running").length,
@@ -382,7 +513,7 @@ test("reduced motion stops animations and smooth scrolling", async ({ page }) =>
 });
 test("native scrolling advances the programme and plays entrance motion", async ({ page }) => {
   await page.emulateMedia({reducedMotion:"no-preference"});
-  await page.goto("/");
+  await page.goto("/datathon/");
   await page.locator("#event").scrollIntoViewIfNeeded();
   await expect(page.locator(".track-diagram")).toHaveAttribute("data-visible","true");
   await page.locator("#packages").scrollIntoViewIfNeeded();
@@ -391,7 +522,7 @@ test("native scrolling advances the programme and plays entrance motion", async 
 test("all locales fit narrow, tablet, and desktop screens", async ({ page }, info) => {
   test.skip(info.project.name !== "desktop", "viewport sweep runs once");
   await page.emulateMedia({reducedMotion:"reduce"});
-  for (const {path,locale} of [...routes, ...jamsRoutes]) {
+  for (const {path,locale} of [...routes, ...datathonRoutes, ...jamsRoutes]) {
     for (const width of [320,390,768,1024,1440]) {
       await page.setViewportSize({width,height:1000});
       await page.goto(path);
