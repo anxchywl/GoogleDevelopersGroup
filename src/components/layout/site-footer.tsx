@@ -13,12 +13,12 @@ export function SiteFooter({ locale, page = "datathon" }: { locale: Locale; page
     <div className="shell">
       <div className="footer-top">
         <div className="footer-brand">
-          <Wordmark locale={locale} title="GDG on Campus" subtitle={c.place} />
+          <Wordmark locale={locale} title="GDG on Campus" subtitle={c.place} href={localePath(locale, "events")} label={c.hub.back} />
           <p className="footer-about">{c.orgBody}</p>
         </div>
         <nav className="footer-links" aria-label={navLabel[locale]}>
           <div>
-            <h3>{c.footerEvents}</h3>
+            <h3><a href={localePath(locale, "events")} aria-current={page === "events" ? "page" : undefined}>{c.footerEvents}</a></h3>
             {events.map((item) => <a key={item.page} href={localePath(locale, item.page)} aria-current={item.page === page ? "page" : undefined}>{item.name}</a>)}
           </div>
           <div className="footer-contacts">

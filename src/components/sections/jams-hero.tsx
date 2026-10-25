@@ -1,7 +1,6 @@
 import { copy } from "@/content/copy";
 import { jams } from "@/content/event";
 import type { Locale } from "@/content/types";
-import { nextJamWhen } from "@/lib/site";
 import { Arrow } from "../ui/arrow";
 import { JamTable } from "../ui/jam-visuals";
 
@@ -20,7 +19,7 @@ export function JamsHero({ locale }: { locale: Locale }) {
           <a className="button dark" href="#students">{j.studentCta}<Arrow /></a>
           <a className="button ghost" href="#professors">{j.professorCta}<Arrow /></a>
         </div>
-        <p className="jam-hero-where"><span>{c.place}</span><b>{j.next}: {nextJamWhen(locale)}</b></p>
+        <p className="jam-hero-where"><span>{c.place}</span><span>{j.nextAnnouncement}</span></p>
       </div>
       <figure className="jam-hero-art">
         <JamTable caseWord={j.table.case} />

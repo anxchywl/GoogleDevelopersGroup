@@ -9,7 +9,7 @@ export const dynamicParams = false;
 export async function generateMetadata({ params }: { params: Params }) {
   const { locale } = await params;
   if (locale !== "kk" && locale !== "ru") notFound();
-  return metadata(locale);
+  return metadata(locale, "events");
 }
 export default async function Layout({ children, params }: { children: ReactNode; params: Params }) {
   const { locale } = await params;

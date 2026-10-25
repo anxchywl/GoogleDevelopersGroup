@@ -22,10 +22,10 @@ export function GdgMark({ animate = false, className = "" }: { animate?: boolean
 }
 
 // every page signs with the chapter mark; the datathon tiles live in its hero
-export function Wordmark({ locale, title = "NU Datathon", subtitle }: { locale: Locale; title?: string; subtitle?: string }) {
+export function Wordmark({ locale, title = "NU Datathon", subtitle, href = "#top", label }: { locale: Locale; title?: string; subtitle?: string | null; href?: string; label?: string }) {
   const c = copy[locale];
-  return <a className="wordmark" href="#top" aria-label={c.home}>
+  return <a className="wordmark" href={href} aria-label={label ?? c.home}>
     <GdgMark animate className="wordmark-mark" />
-    <span className="wordmark-text"><b>{title}</b><small>{subtitle ?? c.by}</small></span>
+    <span className="wordmark-text"><b>{title}</b>{subtitle !== null && <small>{subtitle ?? c.by}</small>}</span>
   </a>;
 }

@@ -2,13 +2,13 @@ import type { CSSProperties } from "react";
 import { copy } from "@/content/copy";
 import { event, jams } from "@/content/event";
 import type { Locale } from "@/content/types";
-import { nextJamWhen, stubDate } from "@/lib/site";
+import { stubDate } from "@/lib/site";
 import { Arrow } from "../ui/arrow";
 
 export function JamsNext({ locale }: { locale: Locale }) {
   const c = copy[locale];
   const j = c.jams;
-  const date = stubDate(locale, jams.next.value.date);
+  const date = stubDate(locale, jams.last.value.date);
   const photos = [
     { file: event.team.file, small: 800, large: 1600, width: event.team.width, height: event.team.height, caption: c.teamCaption },
     { file: "mentoring", small: 600, large: 1200, width: 1200, height: 800, caption: c.photos.mentoring },
@@ -19,17 +19,32 @@ export function JamsNext({ locale }: { locale: Locale }) {
       <p className="eyebrow" data-decode>{j.nextLabel}</p>
       <h2 id="next-title">{j.nextTitle}</h2>
     </div>
-    <div className="ticket" data-reveal>
-      <div className="ticket-stub">
-        <span className="ticket-day">{date.day}</span>
-        <span className="ticket-month">{date.rest}</span>
-      </div>
-      <div className="ticket-body">
-        <p className="ticket-place">{c.place}</p>
-        <h3>{j.next}: {nextJamWhen(locale)}</h3>
-        <p>{j.nextBody}</p>
-        <a className="text-link" href={jams.telegram} target="_blank" rel="noopener noreferrer">t.me/gdsc_nu<Arrow diagonal /></a>
-      </div>
+    <div className="jam-tickets" data-reveal>
+      <article className="ticket ticket-completed">
+        <div className="ticket-stub">
+          <span className="ticket-day">{date.day}</span>
+          <span className="ticket-month">{date.rest}</span>
+        </div>
+        <div className="ticket-body">
+          <p className="ticket-place">{c.place}</p>
+          <p className="ticket-status">{j.completed}</p>
+          <h3>{j.completedTitle}</h3>
+          <p>{j.completedBody}</p>
+        </div>
+      </article>
+      <article className="ticket ticket-upcoming">
+        <div className="ticket-stub ticket-stub-upcoming">
+          <span className="ticket-month">{j.dateLabel}</span>
+          <span className="ticket-tba">TBA</span>
+        </div>
+        <div className="ticket-body">
+          <p className="ticket-place">{c.place}</p>
+          <p className="ticket-status">{j.upcomingLabel}</p>
+          <h3>{j.upcomingTitle}</h3>
+          <p>{j.nextBody}</p>
+          <a className="text-link" href={jams.telegram} target="_blank" rel="noopener noreferrer">t.me/gdsc_nu<Arrow diagonal /></a>
+        </div>
+      </article>
     </div>
 
     <div className="crew">
