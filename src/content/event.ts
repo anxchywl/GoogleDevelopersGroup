@@ -15,19 +15,19 @@ export const event = {
   organizerFull: known("Google Developer Group at Nazarbayev University", profile),
   status: "proposed" as "proposed" | "confirmed",
   location: "Nazarbayev University, Astana",
-  dates: known({ start: "2026-10-23", end: "2026-10-25" }, "organizer, confirmed 2026-09-16"),
+  dates: known({ start: "2027-03-13", end: "2027-03-14" }, "user-provided day and month 2026-10-26; year assumed as the next March"),
   participants: planned(300),
   durationHours: planned(48),
   trackCount: 2,
-  dayCount: 3,
+  dayCount: 2,
   email: known("gdsc@nu.edu.kz", proposal + ", page 11"),
   registration: unknown<string>(),
   siteUrl,
   canonicalUrl: known(siteUrl, "organizer, indexing approved 2026-09-16"),
   logoPermission: { status: "approved", source: "chapter-supplied profile mark, confirmed for this site by the organizer" } as Permission,
   affiliation: known("Official campus chapter of Google Developer Groups", profile),
-  followers: known(987, profile + ", read 2026-09-16"),
-  subscribers: known(1024, channel),
+  followers: known(987, profile + ", current count provided by user 2026-10-26"),
+  subscribers: known(1024, channel + ", current count provided by user 2026-10-26"),
   githubUrl: known("https://github.com/anxchywl/GoogleDevelopersGroup", "site repository"),
   sources: {
     proposal,
@@ -60,7 +60,7 @@ export const event = {
   ] as PastPartner[],
   sponsors: [] as Sponsor[],
   tracks: ["software", "ml"] as const,
-  schedule: ["learn", "build", "present"] as const,
+  schedule: ["learn-build", "present"] as const,
 };
 
 export const packages: Package[] = [

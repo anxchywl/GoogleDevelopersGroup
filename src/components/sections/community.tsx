@@ -1,10 +1,13 @@
 import { copy } from "@/content/copy";
 import { event } from "@/content/event";
 import type { Locale } from "@/content/types";
+import { plain } from "@/lib/site";
 import { Gallery } from "./gallery";
 
 export function Community({ locale }: { locale: Locale }) {
   const c = copy[locale];
+  const telegramCount = event.subscribers.status === "unknown" ? "—" : plain(locale, event.subscribers.value).replace(/[,\u00a0\u202f]/g, " ");
+  const instagramCount = event.followers.status === "unknown" ? "—" : plain(locale, event.followers.value);
   return <section id="community" className="section community-section" aria-labelledby="org-title"><div className="shell">
     <div className="org-grid">
       <div data-reveal>
@@ -14,10 +17,14 @@ export function Community({ locale }: { locale: Locale }) {
         <p className="mission">{c.mission}</p>
       </div>
       <div className="org-stats" data-reveal>
-        {c.orgStats.map((stat, i) => <div key={stat.label}>
-          <span className={`stat-value dot-${i}`} data-count>{stat.value}</span>
-          <span className="stat-label">{stat.label}</span>
-        </div>)}
+        <div>
+          <span className="stat-value dot-0" data-count>{telegramCount}</span>
+          <span className="stat-label">{c.orgStats.telegram}</span>
+        </div>
+        <div>
+          <span className="stat-value dot-1" data-count>{instagramCount}</span>
+          <span className="stat-label">{c.orgStats.instagram}</span>
+        </div>
         <p className="org-place">{c.orgPlace}</p>
       </div>
     </div>

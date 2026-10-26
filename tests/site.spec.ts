@@ -19,7 +19,9 @@ for (const route of routes) {
     await expect(page.locator("html")).toHaveAttribute("lang", route.locale);
     await expect(page.locator("h1")).toContainText("Datathon");
     await expect(page.locator(".track-card")).toHaveCount(2);
-    await expect(page.locator(".days li")).toHaveCount(3);
+    await expect(page.locator(".days li")).toHaveCount(2);
+    await expect(page.locator(".dot-0")).toHaveText(/1\s?024/u);
+    await expect(page.locator(".dot-1")).toHaveText("987");
     await expect(page.locator("details")).toHaveCount(4);
     await expect(page.locator(".gallery-rail li")).toHaveCount(5);
     await expect(page.locator(".past-partners img")).toHaveCount(7);

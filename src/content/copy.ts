@@ -12,7 +12,7 @@ const en = {
     { value: "300+", label: "participants expected" },
     { value: "48", label: "hours of building" },
     { value: "02", label: "technical tracks" },
-    { value: "03", label: "days on campus" },
+    { value: "02", label: "days on campus" },
   ],
 
   valueLabel: "01 / WHAT YOU GET", valueTitle: "What your company\ngets out of it.",
@@ -30,9 +30,8 @@ const en = {
   ],
   day: "Day",
   days: [
-    { title: "Speakers and coffee break", body: "Talks and workshops from industry experts, a walk through the technical stack, and the networking where teams form." },
-    { title: "Case announcement", body: "Partners present their tasks, teams lock in, mentor checkpoints start, and development runs non-stop." },
-    { title: "Pitching", body: "Teams package the product, present to the jury, and the winners are announced." },
+    { title: "Speakers, workshops and case announcement", body: "Hear from industry experts, form teams, meet mentors and start building." },
+    { title: "Build and pitch", body: "Finish the prototype, present it to the jury, and hear which teams won." },
   ],
 
   packagesLabel: "03 / PACKAGES", packagesTitle: "Four ways to sponsor.",
@@ -52,10 +51,7 @@ const en = {
   orgBody: "GDG on Campus Nazarbayev University is the official campus chapter at NU. We run talks, workshops and hackathons for students in IT, mathematics and related fields.",
   mission: "We work to grow the IT ecosystem in Kazakhstan, teach current technology such as generative AI and cloud, and connect student talent with business.",
   teamCaption: "GDG on Campus NU members, September 2025",
-  orgStats: [
-    { value: "1 024", label: "subscribers on Telegram" },
-    { value: "987", label: "followers on Instagram" },
-  ],
+  orgStats: { telegram: "subscribers on Telegram", instagram: "followers on Instagram" },
   orgPlace: "Nazarbayev University campus, Astana",
   galleryLabel: "From our events",
   photos: {
@@ -151,7 +147,7 @@ const kk: typeof en = {
     { value: "300+", label: "күтілетін қатысушы" },
     { value: "48", label: "сағат әзірлеу" },
     { value: "02", label: "техникалық бағыт" },
-    { value: "03", label: "күн кампуста" },
+    { value: "02", label: "күн кампуста" },
   ],
 
   valueLabel: "01 / СІЗ НЕ АЛАСЫЗ", valueTitle: "Компанияңыз нақты\nне алады.",
@@ -169,9 +165,8 @@ const kk: typeof en = {
   ],
   day: "Күн",
   days: [
-    { title: "Спикерлер және кофе-брейк", body: "Индустрия сарапшыларының дәрістері мен воркшоптары, техникалық стекпен танысу және командалар құрылатын нетворкинг." },
-    { title: "Кейсті жариялау", body: "Серіктестер міндеттерін ұсынады, командалар бекітіледі, менторлармен кездесулер басталады және әзірлеу тоқтаусыз жүреді." },
-    { title: "Питчинг", body: "Командалар өнімді жинақтап, қазылар алқасына ұсынады, жеңімпаздар жарияланады." },
+    { title: "Спикерлер, воркшоптар және кейстің жариялануы", body: "Сала сарапшыларын тыңдап, командаларға бірігіп, менторлармен танысып, әзірлеуді бастаңыз." },
+    { title: "Әзірлеу және питчинг", body: "Прототипті аяқтап, қазылар алқасына таныстырыңыз және жеңімпаздарды біліңіз." },
   ],
 
   packagesLabel: "03 / ПАКЕТТЕР", packagesTitle: "Демеушіліктің төрт форматы.",
@@ -191,10 +186,7 @@ const kk: typeof en = {
   orgBody: "GDG on Campus Nazarbayev University — НУ-дағы ресми кампус чаптері. Біз IT, математика және сабақтас салалардағы студенттерге арналған дәрістер, воркшоптар және хакатондар өткіземіз.",
   mission: "Біз Қазақстанның IT экожүйесін дамытуға, генеративті AI мен бұлт сияқты заманауи технологияларды үйретуге және студент таланттарын бизнеспен байланыстыруға жұмыс істейміз.",
   teamCaption: "GDG on Campus NU мүшелері, 2025 жылғы қыркүйек",
-  orgStats: [
-    { value: "1 024", label: "Telegram жазылушысы" },
-    { value: "987", label: "Instagram жазылушысы" },
-  ],
+  orgStats: { telegram: "Telegram жазылушысы", instagram: "Instagram жазылушысы" },
   orgPlace: "Назарбаев Университеті кампусы, Астана",
   galleryLabel: "Іс-шараларымыздан",
   photos: {
@@ -290,7 +282,7 @@ const ru: typeof en = {
     { value: "300+", label: "ожидаемых участников" },
     { value: "48", label: "часов разработки" },
     { value: "02", label: "технических трека" },
-    { value: "03", label: "дня в кампусе" },
+    { value: "02", label: "дня в кампусе" },
   ],
 
   valueLabel: "01 / ЧТО ВЫ ПОЛУЧАЕТЕ", valueTitle: "Что ваша компания\nполучает на деле.",
@@ -308,9 +300,8 @@ const ru: typeof en = {
   ],
   day: "День",
   days: [
-    { title: "Спикеры и кофе-брейк", body: "Лекции и воркшопы от экспертов индустрии, разбор технического стека и нетворкинг, из которого собираются команды." },
-    { title: "Анонс кейса", body: "Партнёры представляют задачи, команды фиксируются, начинаются чек-поинты с менторами и непрерывная разработка." },
-    { title: "Питчинг", body: "Команды упаковывают продукт, защищают его перед жюри, объявляются победители." },
+    { title: "Спикеры, воркшопы и объявление кейса", body: "Послушайте экспертов индустрии, соберите команды, познакомьтесь с менторами и начните разработку." },
+    { title: "Разработка и питчинг", body: "Завершите прототип, представьте его жюри и узнайте, какие команды победили." },
   ],
 
   packagesLabel: "03 / ПАКЕТЫ", packagesTitle: "Четыре формата спонсорства.",
@@ -330,10 +321,7 @@ const ru: typeof en = {
   orgBody: "GDG on Campus Nazarbayev University — официальный кампусный чаптер в НУ. Мы проводим лекции, воркшопы и хакатоны для студентов IT, математики и смежных направлений.",
   mission: "Мы развиваем IT-экосистему Казахстана, учим современным технологиям вроде генеративного AI и облака и связываем студенческие таланты с бизнесом.",
   teamCaption: "Участники GDG on Campus NU, сентябрь 2025",
-  orgStats: [
-    { value: "1 024", label: "подписчика в Telegram" },
-    { value: "987", label: "подписчиков в Instagram" },
-  ],
+  orgStats: { telegram: "подписчика в Telegram", instagram: "подписчиков в Instagram" },
   orgPlace: "Кампус Назарбаев Университета, Астана",
   galleryLabel: "С наших мероприятий",
   photos: {

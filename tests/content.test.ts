@@ -40,6 +40,8 @@ describe("publishable content", () => {
       expect(Date.parse(start)).toBeLessThan(Date.parse(end));
       expect(Math.round((Date.parse(end) - Date.parse(start)) / 86400000) + 1).toBe(event.dayCount);
     }
+    expect(event.dates.value).toEqual({ start: "2027-03-13", end: "2027-03-14" });
+    for (const locale of locales) expect(copy[locale].days).toHaveLength(event.dayCount);
   });
   it("requires permission and a confirmed relationship before a sponsor logo appears", () => {
     for (const sponsor of event.sponsors) {
@@ -71,7 +73,7 @@ describe("publishable content", () => {
     expect(numberShape("no digits")).toBeNull();
     // every number the page animates must survive a round trip
     for (const locale of locales) {
-      for (const item of [...copy[locale].stats, ...copy[locale].orgStats]) {
+      for (const item of copy[locale].stats) {
         const shape = numberShape(item.value)!;
         expect(shape.at(shape.target)).toBe(item.value);
       }
