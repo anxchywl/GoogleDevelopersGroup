@@ -201,7 +201,7 @@ a.history-card:focus-visible { outline-offset:3px; }
 .track-tags li { border:1px solid #becce5; padding:6px 12px; border-radius:100px; font-size:10px; }
 .track-1 .track-tags li { border-color:#bed1b6; }
 
-.days { list-style:none; padding:0; margin:52px 0 0; display:grid; grid-template-columns:repeat(3,1fr); gap:26px; counter-reset:day; }
+.days { list-style:none; padding:0; margin:52px 0 0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:36px; counter-reset:day; }
 .days li { border-top:2px solid var(--line); padding-top:22px; transition:border-color .45s; }
 .days li[data-active=true]:nth-child(1) { border-color:var(--blue); }
 .days li[data-active=true]:nth-child(2) { border-color:var(--amber); }
